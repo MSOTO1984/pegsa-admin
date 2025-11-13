@@ -22,7 +22,9 @@ if (!empty($menuCanvas)) {
         <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="//code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-        <link href="css/AdminLTE.css" rel="stylesheet" type="text/css" />      
+        
+        <link href="css/AdminLTE.css" rel="stylesheet" type="text/css" />    
+        <link href="css/datepicker/datepicker3.css" rel="stylesheet" type="text/css" />      
     </head>
     <body class="skin-blue">
         <?php include_once 'lib/header.php'; ?>       
@@ -59,11 +61,19 @@ if (!empty($menuCanvas)) {
             </aside>
         </div>
 
+        <!-- jQuery -->
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+        <!-- Bootstrap -->
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
 
+        <!-- DataTables -->
         <script src="js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
         <script src="js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
+
+        <!-- Bootstrap Datepicker -->
+        <script src="js/plugins/datepicker/bootstrap-datepicker.js"></script>
+        <script src="js/plugins/datepicker/locales/bootstrap-datepicker.es.js"></script>
 
         <script src="js/AdminLTE/app.js" type="text/javascript"></script>
         <!--script src="js/AdminLTE/demo.js" type="text/javascript"></script-->
@@ -78,6 +88,12 @@ if (!empty($menuCanvas)) {
                     "bSort": true,
                     "bInfo": true,
                     "bAutoWidth": false
+                });
+                $('.datepicker').datepicker({
+                    autoclose: true,
+                    todayHighlight: true,
+                    format: 'dd/mm/yyyy',
+                    language: 'es'
                 });
             });
         </script>

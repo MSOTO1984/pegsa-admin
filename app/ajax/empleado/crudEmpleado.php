@@ -35,22 +35,4 @@ class CrudEmpleado {
         }
         return Conexion::ejecutar($sql);
     }
-
-    function consultarEmpleado($emailEmpleado) {
-        $sql = "SELECT  a.codEmpleado,
-                        a.codGenero,
-                        a.nomEmpleado,
-                        a.codPerfil,
-                        a.claveEmpleado,
-                        a.isChangePass,
-                        b.nomPerfil
-                FROM    tab_empleados a LEFT JOIN tab_perfiles b on a.codPerfil = b.codPerfil
-                WHERE   a.emailEmpleado = '" . $emailEmpleado . "' 
-                AND     a.codEstado = 1";
-        $matriz = Conexion::obtener($sql);
-        if (isset($matriz)) {
-            return $matriz[0];
-        }
-        return null;
-    }
 }

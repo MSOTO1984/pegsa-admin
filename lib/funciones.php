@@ -42,8 +42,8 @@ class Funciones {
             $select .= " AND a.codTipoEstado = " . $params['codTipoEstado'];
         }
 
-        if (isset($params['tipoEmpresa'])) {
-            $select .= " AND a.codTipoEmpresa = " . $params['codTipoEmpresa'];
+        if (isset($params['perfil'])) {
+            $select .= " AND a.codPerfil = " . $params['codPerfil'];
         }
 
         if (isset($params['codEstado'])) {

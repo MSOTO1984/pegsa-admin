@@ -6,30 +6,31 @@ require( '../../../lib/helper.php' );
 require( '../../../lib/params.php' );
 require( '../../../lib/conexion.php' );
 
-require( 'crudEmpleado.php' );
+require( 'crudCapacitacion.php' );
 
 Conexion::conectar();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $crudEmpleado = new CrudEmpleado();
+    $crudCapacitacion = new CrudCapacitacion();
 
     $usuarioCreacion = isset($_SESSION[MISESSION]['codUsuario']) ? $_SESSION[MISESSION]['codUsuario'] : null;
     $state = $_POST['state'];
 
     if ($state == "Registrar" || $state == "Actualizar") {
-        if (isset($_POST['codEmpleado']) && isset($_POST['nomEmpleado'])) {
+        if (isset($_POST['nomCapacitacion'])) {
 
-            $codEmpleado = $_POST['codEmpleado'];
-            $nomEmpleado = $_POST['nomEmpleado'];
-            $emailEmpleado = $_POST['emailEmpleado'];
-            $celEmpleado = $_POST['celEmpleado'];
-            $direccion = $_POST['direccion'];
+            $codCapacitacion = isset($_POST['codCapacitacion']) ? $_POST['codCapacitacion'] : '';
+            $nomCapacitacion = $_POST['nomCapacitacion'];
+            $fecha = $_POST['fecha'];
+            $tiempo = $_POST['tiempo'];
+            $observacion = isset($_POST['observacion']) ? $_POST['observacion'] : '';
+            $codTipoCapacitacion = $_POST['codTipoCapacitacion'];
+            $codUsuario = $_POST['codUsuario'];
             $codCiudad = $_POST['codCiudad'];
-            $codGenero = isset($_POST['codGenero']) ? $_POST['codGenero'] : 1;
-            $codEstado = isset($_POST['codEstado']) ? $_POST['codEstado'] : 1;
+            $codEstado = isset($_POST['codEstado']) ? $_POST['codEstado'] : 3;
 
-            if ($crudEmpleado->operacionesEmpleado($state, $codEmpleado, $nomEmpleado, $direccion, $codCiudad, $emailEmpleado, $celEmpleado, $codGenero, $codEstado, $usuarioCreacion)) {
+            if ($crudCapacitacion->operacionesCapacitacion($state, $codCapacitacion, $nomCapacitacion, $fecha, $tiempo, $observacion, $codTipoCapacitacion, $codUsuario, $codCiudad, $codEstado, $usuarioCreacion)) {
                 $respuesta = new stdClass();
                 $respuesta->status = "OK";
                 $respuesta->mensaje = "Acción ( " . $state . " ) realizada con exito! ";

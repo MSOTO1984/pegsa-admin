@@ -154,8 +154,6 @@ class Formulario {
             if ($type == "file") {
                 $placeholder = "";
                 $value = "";
-            } else if ($type == "date") {
-                $placeholder = "";
             }
         }
 
@@ -216,6 +214,122 @@ class Formulario {
         $html = '   <div class="form-group mb-' . $mb . '">';
         $html .= '      <label for="' . $id . '">' . $label . '</label>' . $span;
         $html .= '      <input' . $width . $maxlength . ' class="' . $class . '" type="' . $type . '" id="' . $id . '"  name="' . $id . '" ' . $placeholder . $value . $onchange . $onblur . $onkeyup . $readonly . $disabled . $required . '/>';
+        $html .= '  </div>';
+        echo $html;
+    }
+
+    function textArea($params = "") {
+
+        if ($params == "") {
+            $params = array();
+        }
+
+        $mb = 3;
+        if (isset($params['mb'])) {
+            $mb = $params['mb'];
+        }
+
+        $id = "";
+        $text = "";
+        if (isset($params['id'])) {
+            $id = $params['id'];
+            $text = $_REQUEST[$id];
+        }
+
+        $label = "";
+        $placeholder = "";
+        if (isset($params['label'])) {
+            $label = $params['label'];
+            $placeholder = ' placeholder="' . $label . '" ';
+        }
+
+        $class = "form-control";
+        if (isset($params['class'])) {
+            $class = " class ";
+        }
+
+        $rows = "";
+        if (isset($params['rows'])) {
+            $rows = $params['rows'];
+        }
+
+        $readonly = "";
+        if (isset($params['readonly'])) {
+            if ($params['readonly'] == "1") {
+                $readonly = " readonly ";
+            }
+        }
+
+        $disabled = "";
+        if (isset($params['disabled'])) {
+            $disabled = " disabled ";
+        }
+
+        $required = "";
+        if (isset($params['required'])) {
+            $label = "* " . $label;
+            $required = " required ";
+        }
+
+        $html = '   <div class="form-group mb-' . $mb . '">';
+        $html .= '      <label for="' . $id . '">' . $label . '</label>';
+        $html .= '      <textarea class="' . $class . '" id="' . $id . '" name="' . $id . '" rows="' . $rows . '" ' . $placeholder . $readonly . $disabled . $required . '>' . $text . '</textarea>';
+        $html .= '  </div>';
+        echo $html;
+    }
+
+    function datePicker($params = "") {
+
+        if ($params == "") {
+            $params = array();
+        }
+
+        $mb = 3;
+        if (isset($params['mb'])) {
+            $mb = $params['mb'];
+        }
+
+        $label = "";
+        if (isset($params['label'])) {
+            $label = $params['label'];
+        }
+
+        $id = "";
+        if (isset($params['id'])) {
+            $id = $params['id'];
+        }
+
+        $value = "";
+        if (isset($_REQUEST[$id])) {
+            $value = ' value="' . $_REQUEST[$id] . '" ';
+        }
+
+        $readonly = "";
+        if (isset($params['readonly'])) {
+            if ($params['readonly'] == "1") {
+                $readonly = " readonly ";
+            }
+        }
+
+        $disabled = "";
+        if (isset($params['disabled'])) {
+            $disabled = " disabled ";
+        }
+
+        $required = "";
+        if (isset($params['required'])) {
+            $label = "* " . $label;
+            $required = " required ";
+        }
+
+        $html = '   <div class="form-group mb-' . $mb . '">';
+        $html .= '      <label for="' . $id . '">' . $label . '</label>';
+        $html .= '      <div class="input-group date">';
+        $html .= '          <div class="input-group-addon">';
+        $html .= '              <i class="fa fa-calendar"></i>';
+        $html .= '          </div>';
+        $html .= '          <input type="text" class="form-control datepicker" id="' . $id . '"  name="' . $id . '" placeholder="dd/mm/yyyy"' . $value . $readonly . $disabled . $required . '/>';
+        $html .= '      </div>';
         $html .= '  </div>';
         echo $html;
     }
@@ -527,54 +641,54 @@ class Formulario {
 
     public function checkbox2($params = "") {
 
-        /*if ($params == "") {
-            $params = array();
-        }
+        /* if ($params == "") {
+          $params = array();
+          }
 
-        $id = "";
-        if (isset($params['id'])) {
-            $id = $params['id'];
-        }
+          $id = "";
+          if (isset($params['id'])) {
+          $id = $params['id'];
+          }
 
-        $value = "";
-        if (isset($params['value'])) {
-            $value = $params['value'];
-        }
+          $value = "";
+          if (isset($params['value'])) {
+          $value = $params['value'];
+          }
 
-        $label = "";
-        if (isset($params['label'])) {
-            $label = $params['label'];
-        }
+          $label = "";
+          if (isset($params['label'])) {
+          $label = $params['label'];
+          }
 
-        $disabled = "";
-        if (isset($params['disabled'])) {
-            $disabled = " disabled ";
-        }
+          $disabled = "";
+          if (isset($params['disabled'])) {
+          $disabled = " disabled ";
+          }
 
-        $required = "";
-        if (isset($params['required'])) {
-            $label = "* " . $params['label'];
-            $required = " required ";
-        }
+          $required = "";
+          if (isset($params['required'])) {
+          $label = "* " . $params['label'];
+          $required = " required ";
+          }
 
-        $checked = "";
-        if (isset($params['checked'])) {
-            if ($params['checked'] == "1") {
-                $checked = " checked ";
-            }
-        }
+          $checked = "";
+          if (isset($params['checked'])) {
+          if ($params['checked'] == "1") {
+          $checked = " checked ";
+          }
+          }
 
-        $onchange = "";
-        if (isset($params['onchange'])) {
-            $onchange = $params['onchange'];
-        }*/
+          $onchange = "";
+          if (isset($params['onchange'])) {
+          $onchange = $params['onchange'];
+          } */
 
-        /*$html = '   <div>';
-        $html .= '      <label for="' . $id . '">';
-        $html .= '          <input type="checkbox" id="' . $id . '" name="' . $id . '" value="' . $value . '" ' . $required . $disabled . $checked . $onchange . '/>&nbsp;&nbsp;';
-        $html .= $label;
-        $html .= '      </label>';
-        $html .= '  </div>';*/
+        /* $html = '   <div>';
+          $html .= '      <label for="' . $id . '">';
+          $html .= '          <input type="checkbox" id="' . $id . '" name="' . $id . '" value="' . $value . '" ' . $required . $disabled . $checked . $onchange . '/>&nbsp;&nbsp;';
+          $html .= $label;
+          $html .= '      </label>';
+          $html .= '  </div>'; */
 
         echo '  <div class="form-group">
                     <div class="checkbox">
@@ -588,9 +702,7 @@ class Formulario {
 
         //echo $html;
     }
-    
-    
-    
+
     // Sin revisar de aqui para abajo
     function iniFootPanel() {
         $html = '<div class="card-footer">';

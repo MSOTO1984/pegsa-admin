@@ -71,7 +71,7 @@ INSERT INTO tab_options (codOption, nomOption, rutOption, levOption, codParent, 
 (202, 'Actualizar clave', 'usuario/actualizarClave', 2, 200, '', 2, 2),
 (300, 'Generales', '', 1, 1, 'fa fa-binoculars', 1, 3),
 (301, 'Empleados', 'empleado/gestionarEmpleado', 2, 300, '', 1, 1),
-(302, 'Capacitaci&oacute;n', 'general/capacitacion', 2, 300, '', 1, 2);
+(302, 'Capacitaci&oacute;n', 'capacitacion/capacitacion', 2, 300, '', 1, 2);
 
 CREATE TABLE tab_permisos (
   codPermiso int NOT NULL AUTO_INCREMENT,
@@ -403,6 +403,44 @@ CREATE TABLE tab_empleados (
   PRIMARY KEY (codEmpleado),
   CONSTRAINT UNIQUE_USUARIO_EMAIL_EMPLEADOS UNIQUE (nomEmpleado,emailEmpleado),
   FOREIGN KEY (codGenero) REFERENCES tab_generos(codGenero),
+  FOREIGN KEY (codCiudad) REFERENCES tab_ciudades(codCiudad),
+  FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado) 
+);
+
+CREATE TABLE tab_tipo_capacitacion (
+  codTipoCapacitacion int NOT NULL AUTO_INCREMENT,
+  nomTipoCapacitacion varchar(80) NOT NULL,
+  usuarioCreacion varchar(60) NOT NULL,
+  fechaCreacion datetime NOT NULL,
+  usuarioEdicion varchar(60) DEFAULT NULL,
+  fechaEdicion datetime DEFAULT NULL,
+  PRIMARY KEY (codTipoCapacitacion),
+  CONSTRAINT UNIQUE_NOMBRE_TIPO_CAPACITACION UNIQUE (nomTipoCapacitacion)
+);
+
+INSERT INTO tab_tipo_capacitacion (codTipoCapacitacion, nomTipoCapacitacion, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) VALUES
+(1, 'Gerencia', '800000001', now(), NULL, NULL),
+(2, 'Seguridad en el Trabajo', '800000001', now(), NULL, NULL),
+(3, 'Sistemas', '800000001', now(), NULL, NULL);
+
+CREATE TABLE tab_capacitaciones (
+  codCapacitacion int NOT NULL AUTO_INCREMENT,
+  nomCapacitacion varchar(100) NOT NULL,
+  fecha varchar(10) NOT NULL,
+  tiempo int DEFAULT 0,
+  asistencia int DEFAULT 0,
+  observacion TEXT DEFAULT NULL,
+  codTipoCapacitacion int NOT NULL,
+  codUsuario varchar(40) NOT NULL,
+  codCiudad int NOT NULL,
+  codEstado int NOT NULL,
+  usuarioCreacion varchar(40) NOT NULL,
+  fechaCreacion datetime NOT NULL,
+  usuarioEdicion varchar(40) DEFAULT NULL,
+  fechaEdicion datetime DEFAULT NULL,
+  PRIMARY KEY (codCapacitacion),
+  FOREIGN KEY (codTipoCapacitacion) REFERENCES tab_tipo_capacitacion(codTipoCapacitacion),
+  FOREIGN KEY (codUsuario) REFERENCES tab_usuarios(codUsuario),
   FOREIGN KEY (codCiudad) REFERENCES tab_ciudades(codCiudad),
   FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado) 
 );
