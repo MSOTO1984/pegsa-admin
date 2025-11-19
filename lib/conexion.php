@@ -38,6 +38,27 @@ class Conexion {
 
         return self::$result;
     }
+    
+     public static function ejecutarSP($nombreProcedimiento, $params) {
+        try {
+            $parametros = implode(',', array_fill(0, count($params), '?'));
+            $sql = "CALL $nombreProcedimiento($parametros)";
+            //Conexion::verSP($nombreProcedimiento, $params);
+            self::$result = self::$pdo->prepare($sql);
+
+            $i = 1;
+            foreach ($params as $param) {
+                self::$result->bindValue($i++, $param);
+            }
+
+            return self::$result->execute();
+        } catch (PDOException $e) {
+            // Manejar excepciones
+            echo 'ERROR: ' . $e->getMessage() . '</br></br>';
+            //echo '<script>alert(' . $e->getMessage() . ');</script>';
+            return null;
+        }
+    }
 
     public static function obtener($sql, $index = 'assoc', $matriz = NULL) {
         try {

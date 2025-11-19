@@ -16,16 +16,13 @@ define("MIAPP", "Pegsa");
 define("MISESSION", "pegsaadmin1.0");
 
 define("APPNAME", "pegsa-admin");
-define("WEB_IMGS", $_SERVER['DOCUMENT_ROOT'] . "/" . APPNAME . "/" . "img/");
-define("PATH_IMGS_SHOPPING", WEB_IMGS . "banner/");
-define("PATH_IMGS_SHOPPING2", WEB_IMGS . "categories/");
-define("PATH_IMGS_SHOPPING3", WEB_IMGS . "products/");
-define("RPATH_IMGS_SHOPPING", "img/banner/");
-define("RPATH_IMGS_SHOPPING2", "img/categories/");
-define("RPATH_IMGS_SHOPPING3", "img/products/");
+define("WEBAPP", $_SERVER['DOCUMENT_ROOT'] . "/" . APPNAME . "/" . "app/");
+define("PATHFIRMAS", WEBAPP . "asistencia/firmas/");
 
 define("ENVIOCORREO", false);
 define("MAILPORT", 25);
 define("MAILHOST", "mail.helpu.com.co");
 define("FROM", "notificacionesautomaticas@helpu.com.co");
 define("PASSNOTIFICACIONES", "n64JO+}9Qku.");
+
+

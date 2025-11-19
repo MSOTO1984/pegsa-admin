@@ -444,3 +444,62 @@ CREATE TABLE tab_capacitaciones (
   FOREIGN KEY (codCiudad) REFERENCES tab_ciudades(codCiudad),
   FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado) 
 );
+
+CREATE TABLE tab_asistencias (
+  codAsistencia int NOT NULL AUTO_INCREMENT,
+  codCapacitacion int NOT NULL,
+  codEmpleado varchar(40) NOT NULL,
+  fecha varchar(10) NOT NULL,
+  codEvaluacion BIGINT(20) DEFAULT NULL,
+  usuarioCreacion varchar(40) NOT NULL,
+  fechaCreacion datetime NOT NULL,
+  usuarioEdicion varchar(40) DEFAULT NULL,
+  fechaEdicion datetime DEFAULT NULL,
+  PRIMARY KEY (codAsistencia),
+  FOREIGN KEY (codCapacitacion) REFERENCES tab_capacitaciones(codCapacitacion),
+  FOREIGN KEY (codEmpleado) REFERENCES tab_empleados(codEmpleado) 
+);
+
+DELIMITER //
+
+CREATE PROCEDURE registrarAsistencia (
+    IN p_codCapacitacion INT,
+    IN p_codEmpleado VARCHAR(30),
+    IN p_codEvaluacion INT,
+    IN p_fecha VARCHAR(12)
+)
+BEGIN
+    DECLARE v_contador INT DEFAULT 0;
+    DECLARE v_empleados INT DEFAULT 0;
+    DECLARE v_codEstado INT DEFAULT 3;
+    DECLARE v_asistencia INT DEFAULT 0;
+
+    SELECT asistencia INTO v_contador 
+    FROM tab_capacitaciones 
+    WHERE codCapacitacion = p_codCapacitacion AND codEstado = 3;
+
+    SELECT COUNT(*) INTO v_empleados 
+    FROM tab_empleados 
+    WHERE codEstado = 1;
+
+    INSERT INTO tab_asistencias(codCapacitacion, codEmpleado, codEvaluacion, fecha, usuarioCreacion, fechaCreacion) 
+    VALUES (p_codCapacitacion, p_codEmpleado, p_codEvaluacion, p_fecha, p_codEmpleado, NOW() );
+
+    SET v_asistencia = v_contador + 1;
+    IF v_asistencia = v_empleados THEN
+        SET v_codEstado = 4;
+    END IF;
+
+    UPDATE tab_capacitaciones 
+    SET 
+        codEstado = v_codEstado,
+        asistencia = v_asistencia,
+        usuarioEdicion = p_codEmpleado,
+        fechaEdicion = NOW()
+    WHERE codCapacitacion = p_codCapacitacion AND codEstado = 3;
+
+    COMMIT;
+
+END//
+
+DELIMITER ;
