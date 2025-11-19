@@ -107,18 +107,16 @@ if (isset($_GET['codCapacitacion'])) {
                         </div>
                         <div class="row">
                             <div class="col-xs-12">
-                                <div class="modal-body p-4">
-                                    <div class="text-center">                                   
-                                        <canvas id="canvas"></canvas>
-                                        <div class="button-list">
-                                            <input type = 'hidden' id = 'codCapacitacion' name = 'codCapacitacion' value = '<?= $capacitacion['codCapacitacion'] ?>'/>
-                                            <button type="button" class="btn btn-block btn-primary" id="btnFirmar"> 
-                                                <i class="fa fa-pencil"></i> <span>Firmar Asistencia</span> 
-                                            </button>
-                                            <button type="button" class="btn btn-block btn-secondary" id="btnLimpiar"> 
-                                                <i class="fa fa-eraser"></i> <span>Limpiar</span> 
-                                            </button>
-                                        </div>
+                                <div class="text-center">                                   
+                                    <canvas id="canvas"></canvas>
+                                    <div class="button-list">
+                                        <input type = 'hidden' id = 'codCapacitacion' name = 'codCapacitacion' value = '<?= $capacitacion['codCapacitacion'] ?>'/>
+                                        <button type="button" class="btn btn-block btn-primary" id="btnFirmar"> 
+                                            <i class="fa fa-pencil"></i> <span>Firmar Asistencia</span> 
+                                        </button>
+                                        <button type="button" class="btn btn-block btn-secondary" id="btnLimpiar"> 
+                                            <i class="fa fa-eraser"></i> <span>Limpiar</span> 
+                                        </button>
                                     </div>
                                 </div>
                             </div>

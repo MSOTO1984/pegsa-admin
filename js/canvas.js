@@ -22,7 +22,7 @@ if (canvas) {
 
     const limpiarCanvas = () => {
         contador = 0;
-        $canvas.width = 435;
+        $canvas.width = 312;
         $canvas.height = 250;
         contexto.fillStyle = COLOR_FONDO;
         contexto.fillRect(0, 0, $canvas.width, $canvas.height);
