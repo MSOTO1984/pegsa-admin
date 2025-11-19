@@ -97,15 +97,16 @@ if (isset($_GET['codCapacitacion'])) {
                         </div>
 
                         <div class="row">
-                            <div class="col-xs-6">
+                            <div class="col-xs-12">
                                 <?php
                                 $fn = new Funciones();
                                 $form = new formulario();
                                 $form->lista(array("label" => "Colaborador", "id" => "codEmpleado"), getListaEmpleados());
                                 ?>
                             </div>
-
-                            <div class="col-xs-6">
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
                                 <div class="modal-body p-4">
                                     <div class="text-center">                                   
                                         <canvas id="canvas"></canvas>
