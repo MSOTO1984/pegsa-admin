@@ -571,7 +571,7 @@ class Formulario {
         }
 
         $html .= '   <button type="' . $type . '" class="btn ' . $boton . '" id="' . $id . '" name="' . $id . '" value= "' . $label . '" ' . $disabled . $onclick . ' >';
-        $html .= '      <i class="' . $icon . '"></i> <span>' . $label . '</span>';
+        $html .= '      <i class="' . $icon . '"></i> &nbsp;<span>' . $label . '</span>';
         $html .= '  </button>';
 
         if ($link) {

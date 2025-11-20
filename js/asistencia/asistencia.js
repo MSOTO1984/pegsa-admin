@@ -32,3 +32,63 @@ function salvarFirmaColaborador(codEmpleado, codCapacitacion, codEvaluacion, ima
     }
 }
 
+function verificarConsultaAsistencias() {
+
+    const campos = {
+        codUsuario: $("#codUsuario").val(),
+        fechaIni: $("#fechaIni").val(),
+        fechaFin: $("#fechaFin").val(),
+        codTipoCapacitacion: $("#codTipoCapacitacion").val(),
+        codCapacitacion: $("#codCapacitacion").val(),
+        codEmpleado: $("#codEmpleado").val(),
+        codEstado: $("#codEstado").val()
+    };
+
+    let count = 0;
+    const incrementarContador = (campo) => {
+        if (campo.trim() !== "") {
+            count++;
+        }
+    };
+
+    incrementarContador(campos.codUsuario);
+    incrementarContador(campos.fechaIni);
+    incrementarContador(campos.fechaFin);
+    incrementarContador(campos.codTipoCapacitacion);
+    incrementarContador(campos.codCapacitacion);
+    incrementarContador(campos.codEmpleado);
+    incrementarContador(campos.codEstado);
+
+    if (count === 0) {
+        alert("Debe seleccionar como mínimo un filtro para realizar una consulta en asistencias.");
+        return false;
+    }
+
+    const validarFechas = (fechaIni, fechaFin, mensajeInicioRequerido, mensajeFinRequerido, mensajeRangoInvalido) => {
+        if (fechaIni === "" && fechaFin !== "") {
+            alert(mensajeInicioRequerido);
+            return false;
+        }
+        if (fechaFin === "" && fechaIni !== "") {
+            alert(mensajeFinRequerido);
+            return false;
+        }
+        if (fechaIni > fechaFin) {
+            alert(mensajeRangoInvalido);
+            return false;
+        }
+        return true;
+    };
+
+    if (!validarFechas(
+            campos.fechaIni,
+            campos.fechaFin,
+            "El campo Fecha Inicial es requerido cuando se selecciona una Fecha Final.",
+            "El campo Fecha Final es requerido cuando se selecciona una Fecha Inicial.",
+            "La Fecha Final no puede ser anterior a la Fecha Inicial."
+            )) {
+        return false;
+    }
+
+    return true;
+}

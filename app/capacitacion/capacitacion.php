@@ -132,7 +132,7 @@ class Capacitacion {
                 case 'codTipoCapacitacion':
                     $html .= '  <div class="progress xs progress-striped active">
                                     <div class="progress-bar progress-bar-' . $colors['bs'] . '" style="width:' . $porcentaje . '%"></div>
-                                </div><br><span class="badge bg-' . $colors['bg'] . '">' . $porcentaje . '%</span>';
+                                </div><span class="badge bg-' . $colors['bg'] . '">' . $porcentaje . '%</span>';
                     break;
                 default:
                     $html .= $row[$cam];
