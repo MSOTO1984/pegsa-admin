@@ -8,7 +8,7 @@ function salvarFirmaColaborador(codEmpleado, codCapacitacion, codEvaluacion, ima
             formData.append('imageB64', imageB64);
 
             $.ajax({
-                url: "app/asistencia/guardarFirmaColaborador.php",
+                url: "app/ajax/asistencia/guardarFirmaColaborador.php",
                 type: "POST",
                 processData: false,
                 contentType: false,

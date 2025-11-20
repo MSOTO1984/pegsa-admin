@@ -2,9 +2,9 @@
 
 session_start();
 
-require( '../../lib/helper.php' );
-require( '../../lib/params.php' );
-require( '../../lib/conexion.php' );
+require( '../../../lib/helper.php' );
+require( '../../../lib/params.php' );
+require( '../../../lib/conexion.php' );
 
 Conexion::conectar();
 

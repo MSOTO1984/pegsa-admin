@@ -474,13 +474,12 @@ CREATE TABLE tab_capacitaciones (
 );
 
 INSERT INTO tab_capacitaciones (codCapacitacion, nomCapacitacion, fecha, tiempo, asistencia, observacion, codTipoCapacitacion, codUsuario, codCiudad, codEstado, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) 
-VALUES (1, 'Errores en las alturas', '20/11/2025', 30, 0, 'Los errores en las alturas son fallas humanas o técnicas que ocurren durante trabajos elevados y que pueden generar riesgos graves para la integridad y seguridad.', 2, '800000002', 62, 3, '800000002', '2025-11-12 19:00:19', '20000001', '2025-11-18 20:31:45');
+VALUES (1, 'Errores en las alturas', '20/11/2025', 30, 0, 'Los errores en las alturas son fallas humanas o técnicas que ocurren durante trabajos elevados y que pueden generar riesgos graves para la integridad y seguridad.', 1, '800000002', 62, 3, '800000002', now(), null, null);
 
 CREATE TABLE tab_asistencias (
   codAsistencia int NOT NULL AUTO_INCREMENT,
   codCapacitacion int NOT NULL,
   codEmpleado varchar(40) NOT NULL,
-  fecha varchar(10) NOT NULL,
   codEvaluacion BIGINT(20) DEFAULT NULL,
   usuarioCreacion varchar(40) NOT NULL,
   fechaCreacion datetime NOT NULL,
@@ -512,8 +511,8 @@ BEGIN
     FROM tab_empleados 
     WHERE codEstado = 1;
 
-    INSERT INTO tab_asistencias(codCapacitacion, codEmpleado, codEvaluacion, fecha, usuarioCreacion, fechaCreacion) 
-    VALUES (p_codCapacitacion, p_codEmpleado, p_codEvaluacion, NOW(), p_codEmpleado, NOW() );
+    INSERT INTO tab_asistencias(codCapacitacion, codEmpleado, codEvaluacion, usuarioCreacion, fechaCreacion) 
+    VALUES (p_codCapacitacion, p_codEmpleado, p_codEvaluacion, p_codEmpleado, NOW() );
 
     SET v_asistencia = v_contador + 1;
     IF v_asistencia = v_empleados THEN
