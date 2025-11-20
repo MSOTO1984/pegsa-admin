@@ -8,8 +8,8 @@ class Capacitacion {
     var $nombres = "Capacitaciones";
     var $mensaje = "El Capacitacion";
     var $llave = "codCapacitacion";
-    var $campos = array("nomCapacitacion", "fecha", "tiempo", "asistencia", "nomUsuario", "nomTipoCapacitacion", "nomCiudad", "nomEstado");
-    var $columnas = array("Opciones", "Tema", "Fecha", "Tiempo", "Asistencia", "Capacitador", "Tipo", "Ciudad", "Estado");
+    var $campos = array("nomCapacitacion", "fecha", "tiempo", "asistencia", "nomUsuario", "nomTipoCapacitacion", "nomCiudad", "nomEstado", "codTipoCapacitacion");
+    var $columnas = array("Opciones", "Tema", "Fecha", "Tiempo", "Firmas", "Capacitador", "Tipo", "Ciudad", "Estado", "Porcentaje de Avance");
 
     function Menu() {
 
@@ -101,11 +101,43 @@ class Capacitacion {
                 $html .= '      <td align="center">';
                 $html .= '          <a href="' . $url . '"><i class="fa fa-edit" style="cursor: pointer;" title="EDITAR"></i></a>';
                 $html .= '      </td>';
-                foreach ($this->campos as $cam) {
-                    $html .= '  <td>' . $row[$cam] . '</td>';
-                }
+                $html .= $this->resolverCampos($row);
                 $html .= '  </tr>';
             }
+        }
+        return $html;
+    }
+
+    function resolverCampos($row) {
+        $empleados = max(1, (int) $this->getCantidadEmpleados());
+        $asistencia = max(0, (int) $row['asistencia']);
+        $porc = round(($asistencia / $empleados) * 100, 2);
+        $porcentaje = min(max($porc, 0), 100);
+        $colorMap = [
+            3 => ['bs' => 'primary', 'bg' => 'blue'],
+            4 => ['bs' => 'success', 'bg' => 'green'],
+            5 => ['bs' => 'danger', 'bg' => 'red'],
+        ];
+
+        $codEstado = (int) $row['codEstado'];
+        $colors = $colorMap[$codEstado] ?? ['bs' => 'default', 'bg' => 'gray'];
+
+        $html = '';
+        foreach ($this->campos as $cam) {
+            $html .= '<td>';
+            switch ($cam) {
+                case 'nomEstado':
+                    $html .= '<span class="label label-' . $colors['bs'] . '">' . $row[$cam] . '</span>';
+                    break;
+                case 'codTipoCapacitacion':
+                    $html .= '  <div class="progress xs progress-striped active">
+                                    <div class="progress-bar progress-bar-' . $colors['bs'] . '" style="width:' . $porcentaje . '%"></div>
+                                </div><br><span class="badge bg-' . $colors['bg'] . '">' . $porcentaje . '%</span>';
+                    break;
+                default:
+                    $html .= $row[$cam];
+            }
+            $html .= '</td>';
         }
         return $html;
     }
@@ -297,6 +329,15 @@ class Capacitacion {
             return Conexion::obtener($sql);
         }
         return null;
+    }
+
+    function getCantidadEmpleados() {
+        $sql = "SELECT  count(*) cantidad FROM    tab_empleados";
+        $result = Conexion::obtener($sql);
+        if (isset($result)) {
+            return $result[0]['cantidad'];
+        }
+        return 0;
     }
 }
 
