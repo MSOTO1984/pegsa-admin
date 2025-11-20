@@ -149,7 +149,7 @@ class Capacitacion {
             $_REQUEST['codEstado'] = 3;
         }
 
-        $disabled = ($_REQUEST['codEstado'] == 3) ? 1 : 0;
+        $disabled = ($_REQUEST['codEstado'] == 4) ? 1 : 0;
 
         $fn = new Funciones();
         $form = new formulario();
