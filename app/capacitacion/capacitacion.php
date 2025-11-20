@@ -286,10 +286,34 @@ class Capacitacion {
         $form->finCenter();
         $form->finDiv();
 
+        
+        $this->generarExcelCapacitacio($form);
+        
+        
         $form->finDiv();
         $form->finDiv();
         $form->finDiv();
         $form->finDiv();
+    }
+
+    function generarExcelCapacitacio($form) {
+
+        echo "<hr/>";
+        $form->iniForm(array("id" => "Formulario2", "name" => "Formulario2", "action" => "app/capacitacion/generador/excel_asistencias.php"));
+
+        echo'&nbsp;&nbsp;&nbsp;';
+        $form->botonAcciones(array(
+            "link" => false,
+            "type" => "submit",
+            "boton" => "btn btn-success",
+            "id" => "generar",
+            "icon" => "fa fa-file-excel-o",
+            "label" => "Generar Reporte Excel"
+        ));
+
+        $form->Hidden(array("name" => "codCapacitacionEx", "value" => $_REQUEST['codCapacitacion']));
+       
+        $form->finForm();
     }
 
     function getListado($cod) {

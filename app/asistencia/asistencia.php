@@ -127,7 +127,7 @@ class Asistencia {
                 "boton" => "btn btn-success",
                 "id" => "generar",
                 "icon" => "fa fa-file-excel-o",
-                "label" => "Generar Reporte Excel"
+                "label" => "Generar Reporte Asistentes Excel"
             ));
 
             if (!isset($_REQUEST['codUsuario'])) {
