@@ -222,11 +222,12 @@ class Asistencia {
     }
 
     function resolverCampos($row) {
-        $color = match ($row['codEstado']) {
+        $map = [
             3 => 'primary',
             4 => 'success',
             5 => 'danger'
-        };
+        ];
+        $color = $map[$row['codEstado']] ?? 'secondary';
         $html = '';
         foreach ($this->campos as $cam) {
             $html .= '<td>';
