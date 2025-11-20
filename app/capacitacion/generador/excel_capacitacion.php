@@ -8,7 +8,7 @@ include( "../../../lib/conexion.php" );
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-class ExcelAsistencias {
+class ExcelCapacitacion {
 
     var $spreadsheet;
     var $hoja1;
@@ -53,9 +53,9 @@ class ExcelAsistencias {
     function encabezadosHoja() {
         $encabezado = [
             "Tipo Capacitacion", "Capacitacion", "Fecha Capacitacion", "Duracion (Min)",
-            "Ciudad Capacitacion", "Departamento Capacitacion", "Estado Colaborador",
+            "Ciudad Capacitacion", "Departamento Capacitacion", "Estado Capacitacion",
             "Nro. Documento", "Colaborador", "Email", "Telefono", "Ciudad Colaborador",
-            "Departamento Colaborador", "Estado Colaborador", "Asitio?"
+            "Departamento Colaborador", "Estado Colaborador", "Asistio ?"
         ];
         $this->hoja1->setTitle("Capacitaciones");
         $this->hoja1->fromArray($encabezado, null, 'A1');
@@ -69,7 +69,7 @@ class ExcelAsistencias {
         $lista = $this->getInforme();
         if (isset($lista)) {
             $numeroDeFila = 2;
-            $capacitacion = getCapacitacion();
+            $capacitacion = $this->getCapacitacion();
             foreach ($lista as $row) {
                 $count = 1;
                 $this->hoja1->setCellValueByColumnAndRow($count++, $numeroDeFila, $capacitacion['nomTipoCapacitacion']);
@@ -138,5 +138,5 @@ class ExcelAsistencias {
     }
 }
 
-$excelHijas = new ExcelAsistencias();
-$excelHijas->GenerarExcel();
+$excelCapacitacion = new ExcelCapacitacion();
+$excelCapacitacion->GenerarExcel();

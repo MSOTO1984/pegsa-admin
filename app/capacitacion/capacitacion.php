@@ -299,7 +299,7 @@ class Capacitacion {
     function generarExcelCapacitacio($form) {
 
         echo "<hr/>";
-        $form->iniForm(array("id" => "Formulario2", "name" => "Formulario2", "action" => "app/capacitacion/generador/excel_asistencias.php"));
+        $form->iniForm(array("id" => "Formulario2", "name" => "Formulario2", "action" => "app/capacitacion/generador/excel_capacitacion.php"));
 
         echo'&nbsp;&nbsp;&nbsp;';
         $form->botonAcciones(array(

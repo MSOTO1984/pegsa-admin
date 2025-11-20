@@ -47,7 +47,7 @@ class ExcelAsistencias {
         }
 
         if (isset($_REQUEST['fechaIniEx'])) {
-            $this->fechaIni = $_REQUEST['fechaHijaEx'];
+            $this->fechaIni = $_REQUEST['fechaIniEx'];
         }
 
         if (isset($_REQUEST['fechaFinEx'])) {
@@ -167,5 +167,5 @@ class ExcelAsistencias {
     }
 }
 
-$excelHijas = new ExcelAsistencias();
-$excelHijas->GenerarExcel();
+$excelAsistencias = new ExcelAsistencias();
+$excelAsistencias->GenerarExcel();
