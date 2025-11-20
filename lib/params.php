@@ -18,11 +18,11 @@ define("MISESSION", "pegsaadmin1.0");
 define("APPNAME", "pegsa-admin");
 define("WEBAPP", $_SERVER['DOCUMENT_ROOT'] . "/" . APPNAME . "/" . "app/");
 define("PATHFIRMAS", WEBAPP . "asistencia/firmas/");
+define("PATH_REL_FIRMAS", "../" . APPNAME . "/app/asistencia/firmas/");
 
 define("ENVIOCORREO", false);
 define("MAILPORT", 25);
 define("MAILHOST", "mail.helpu.com.co");
 define("FROM", "notificacionesautomaticas@helpu.com.co");
 define("PASSNOTIFICACIONES", "n64JO+}9Qku.");
-
 

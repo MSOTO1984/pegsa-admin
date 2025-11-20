@@ -12,6 +12,8 @@ $capacitacion = null;
 if (isset($_GET['codCapacitacion'])) {
     $codCapacitacion = $_GET['codCapacitacion'];
     $capacitacion = getCapacitacion($codCapacitacion);
+    $codEmpleado = $_GET['codEmpleado'];
+    $firmado = (boolean) validarFirmaEmpleado($codCapacitacion, $codEmpleado);
 }
 ?>
 <!DOCTYPE html>
@@ -42,11 +44,19 @@ if (isset($_GET['codCapacitacion'])) {
                 if (!isset($capacitacion)) {
                     include_once 'lib/404.php';
                 } else {
+                    $color = 'info';
+                    $icono = 'info';
+                    $texto = '<b>Nota:</b>&nbsp; Recuerde dejar la respectiva firma para dar como certificada su capacitaci&oacute;n.';
+                    if ($firmado) {
+                        $color = 'success';
+                        $icono = 'check';
+                        $texto = '<b>Excelente:</b>&nbsp; Gracias por su constante colaboraci&oacute;n, su capacitaci&oacute;n se encuentra certificada.';
+                    }
                     ?>
                     <div class="pad margin no-print">
-                        <div class="alert alert-info" style="margin-bottom: 0!important;">
-                            <i class="fa fa-info"></i>
-                            <b>Nota:</b> Recuerde seleccionar su usuario y realizar la respectiva firma para dar como certificada su capacitacion 
+                        <div class="alert alert-<?= $color ?>" style="margin-bottom: 0!important;">
+                            <i class="fa fa-<?= $icono ?>"></i>
+                            <?= $texto ?>
                         </div>
                     </div>
                     <section class="content invoice">
@@ -101,26 +111,40 @@ if (isset($_GET['codCapacitacion'])) {
                                 <?php
                                 $fn = new Funciones();
                                 $form = new formulario();
-                                $form->lista(array("label" => "Colaborador", "id" => "codEmpleado"), getListaEmpleados());
+                                $form->lista(array("label" => "Colaborador", "id" => "codEmpleado", "disabled" => 1), getListaEmpleados($codEmpleado));
                                 ?>
                             </div>
                         </div>
+
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="text-center">                                   
-                                    <canvas id="canvas"></canvas>
-                                    <div class="button-list">
-                                        <input type = 'hidden' id = 'codCapacitacion' name = 'codCapacitacion' value = '<?= $capacitacion['codCapacitacion'] ?>'/>
-                                        <button type="button" class="btn btn-block btn-primary" id="btnFirmar"> 
-                                            <i class="fa fa-pencil"></i> <span>Firmar Asistencia</span> 
-                                        </button>
-                                        <button type="button" class="btn btn-block btn-secondary" id="btnLimpiar"> 
-                                            <i class="fa fa-eraser"></i> <span>Limpiar</span> 
-                                        </button>
-                                    </div>
+                                    <?php
+                                    if (!$firmado) {
+                                        ?>
+                                        <canvas id="canvas"></canvas>
+                                        <div class="button-list">
+                                            <input type = 'hidden' id = 'codCapacitacion' name = 'codCapacitacion' value = '<?= $capacitacion['codCapacitacion'] ?>'/>
+                                            <button type="button" class="btn btn-block btn-primary" id="btnFirmar"> 
+                                                <i class="fa fa-pencil"></i> <span>Firmar Asistencia</span> 
+                                            </button>
+                                            <button type="button" class="btn btn-block btn-secondary" id="btnLimpiar"> 
+                                                <i class="fa fa-eraser"></i> <span>Limpiar</span> 
+                                            </button>
+                                        </div>
+                                        <?php
+                                    } else {
+                                        ?>
+                                        <div class="firmaEmpleado">
+                                            <img src="<?= PATH_REL_FIRMAS . $codEmpleado . "_" . $codCapacitacion ?>.png" />
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
+
                     </section>
                 <?php }
                 ?>
@@ -135,6 +159,18 @@ if (isset($_GET['codCapacitacion'])) {
 </html>
 <?php
 
+function validarFirmaEmpleado($codCapacitacion, $codEmpleado) {
+    $sql = "SELECT count(*) cantidad
+            FROM   tab_asistencias                
+            WHERE  codEmpleado = '" . $codEmpleado . "'
+              AND  codCapacitacion = " . $codCapacitacion;
+    $result = Conexion::obtener($sql);
+    if (isset($result)) {
+        return $result[0]['cantidad'];
+    }
+    return 0;
+}
+
 function getCapacitacion($codCapacitacion) {
     $sql = "SELECT a.*, b.nomTipoCapacitacion, c.nomUsuario, d.nomCiudad, e.nomDepto
             FROM   tab_capacitaciones a 
@@ -142,9 +178,7 @@ function getCapacitacion($codCapacitacion) {
                         LEFT JOIN tab_usuarios c on a.codUsuario = c.codUsuario
                         LEFT JOIN tab_ciudades d on a.codCiudad = d.codCiudad
                         LEFT JOIN tab_deptos e on d.codDepto = e.codDepto                        
-
-
-            WHERE  a.codEstado = 3 
+            WHERE  a.codEstado = 3
               AND  a.codCapacitacion = " . $codCapacitacion;
     $result = Conexion::obtener($sql);
     if (isset($result)) {
@@ -153,9 +187,10 @@ function getCapacitacion($codCapacitacion) {
     return null;
 }
 
-function getListaEmpleados() {
+function getListaEmpleados($codEmpleado) {
     $sql = "SELECT  a.codEmpleado, UPPER(a.nomEmpleado)
             FROM    tab_empleados a                 
-            WHERE   a.codEstado = 1";
+            WHERE   a.codEstado = 1 
+              AND   codEmpleado = " . $codEmpleado;
     return Conexion::obtener($sql);
 }

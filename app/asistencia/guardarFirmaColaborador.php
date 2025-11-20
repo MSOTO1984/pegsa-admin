@@ -5,7 +5,6 @@ session_start();
 require( '../../lib/helper.php' );
 require( '../../lib/params.php' );
 require( '../../lib/conexion.php' );
-require( '../../lib/funciones.php' );
 
 Conexion::conectar();
 
@@ -19,16 +18,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $imageName = $_POST['codEmpleado'] . "_" . $_POST['codCapacitacion'] . ".png";
         $imageB64 = str_replace("data:image/png;base64,", "", $_POST['imageB64']);
 
-        $fn = new funciones();
-        $fecha = $fn->convertirFechaCargue(date('Y-m-d'));
-
         if (!file_exists(PATHFIRMAS)) {
             mkdir(PATHFIRMAS, 0777);
         }
 
         file_put_contents(PATHFIRMAS . $imageName, base64_decode($imageB64));
 
-        $params = array($codCapacitacion, $codEmpleado, $codEvaluacion, $fecha);
+        $params = array($codCapacitacion, $codEmpleado, $codEvaluacion);
 
         $respuesta = new stdClass();
         if (Conexion::ejecutarSP('registrarAsistencia', $params)) {

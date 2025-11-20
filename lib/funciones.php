@@ -201,25 +201,6 @@ class Funciones {
         return $ITEM;
     }
     
-    function convertirFechaCargue($fechaCargue) {
-        if (empty($fechaCargue)) {
-            return null;
-        }
-
-        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $fechaCargue)) {
-            return $fechaCargue;
-        }
-
-        if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $fechaCargue)) {
-            $fecha = DateTime::createFromFormat('d/m/Y', $fechaCargue);
-            if ($fecha !== false) {
-                return $fecha->format('Y-m-d');
-            }
-        }
-
-        return null;
-    }
-
     /*
       public function obtenerTodo( $tabla, $codigo="", $valorCodigo="", $params="", $app="" )
       {

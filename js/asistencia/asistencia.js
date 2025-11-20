@@ -1,5 +1,5 @@
-function salvarFirmaColaborador(codEmpleado, codCapacitacion, codEvaluacion, imageB64){
-     try {
+function salvarFirmaColaborador(codEmpleado, codCapacitacion, codEvaluacion, imageB64) {
+    try {
         $(document).ready(function () {
             const formData = new FormData();
             formData.append('codEmpleado', codEmpleado);
@@ -17,7 +17,7 @@ function salvarFirmaColaborador(codEmpleado, codCapacitacion, codEvaluacion, ima
                     var data = JSON.parse(datos);
                     if (data.status === 'OK') {
                         alert(data.mensaje);
-                        window.location.href = 'asistencia.php';
+                        window.location.href = 'asistencia.php?codCapacitacion=' + codCapacitacion + '&codEmpleado=' + codEmpleado;
                     }
                 },
                 error: function (objeto, error, otroobj) {

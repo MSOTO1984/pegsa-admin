@@ -71,7 +71,8 @@ INSERT INTO tab_options (codOption, nomOption, rutOption, levOption, codParent, 
 (202, 'Actualizar clave', 'usuario/actualizarClave', 2, 200, '', 2, 2),
 (300, 'Generales', '', 1, 1, 'fa fa-binoculars', 1, 3),
 (301, 'Empleados', 'empleado/gestionarEmpleado', 2, 300, '', 1, 1),
-(302, 'Capacitaci&oacute;n', 'capacitacion/capacitacion', 2, 300, '', 1, 2);
+(302, 'Capacitaci&oacute;n', 'capacitacion/capacitacion', 2, 300, '', 1, 2),
+(303, 'Asistencias', 'asistencia/asistencia', 2, 300, '', 1, 3);
 
 CREATE TABLE tab_permisos (
   codPermiso int NOT NULL AUTO_INCREMENT,
@@ -88,7 +89,8 @@ INSERT INTO tab_permisos (codPermiso, codPerfil, codOption, usuarioCreacion, fec
 (1, 1, 101, '800000001', now()),
 (2, 1, 201, '800000001', now()),
 (3, 1, 301, '800000001', now()),
-(4, 2, 302, '800000001', now());
+(4, 2, 302, '800000001', now()),
+(5, 2, 303, '800000001', now());
 
 CREATE TABLE tab_paises (
   codPais int NOT NULL AUTO_INCREMENT,
@@ -407,6 +409,34 @@ CREATE TABLE tab_empleados (
   FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado) 
 );
 
+INSERT INTO tab_empleados(codEmpleado, nomEmpleado, emailEmpleado, celEmpleado, codGenero, direccion, codCiudad, codEstado, usuarioCreacion, fechaCreacion)
+VALUES
+('20000001', 'Carlos Pérez', 'carlos.perez@example.com', 3001112233, 1, 'Calle 10 #5-20', 62, 1, '800000001', NOW()),
+('20000002', 'María Gómez', 'maria.gomez@example.com', 3001112234, 2, 'Carrera 15 #8-22', 62, 1, '800000001', NOW()),
+('20000003', 'Juan Torres', 'juan.torres@example.com', 3001112235, 1, 'Av 7 #20-11', 62, 1, '800000001', NOW()),
+('20000004', 'Laura Sánchez', 'laura.sanchez@example.com', 3001112236, 2, 'Calle 22 #14-90', 62, 1, '800000001', NOW()),
+('20000005', 'Pedro Rojas', 'pedro.rojas@example.com', 3001112237, 1, 'Calle 30 #19-15', 62, 1, '800000001', NOW()),
+('20000006', 'Ana Castillo', 'ana.castillo@example.com', 3001112238, 2, 'Carrera 12 #33-18', 62, 1, '800000001', NOW()),
+('20000007', 'Diego Martínez', 'diego.martinez@example.com', 3001112239, 1, 'Calle 45 #7-09', 62, 1, '800000001', NOW()),
+('20000008', 'Lucía Vega', 'lucia.vega@example.com', 3001112240, 2, 'Transversal 9 #10-44', 62, 1, '800000001', NOW()),
+('20000009', 'Felipe Navarro', 'felipe.navarro@example.com', 3001112241, 1, 'Calle 5 #3-80', 62, 1, '800000001', NOW()),
+('20000010', 'Sofía Duarte', 'sofia.duarte@example.com', 3001112242, 2, 'Carrera 17 #8-40', 62, 1, '800000001', NOW()),
+('20000011', 'Miguel Herrera', 'miguel.herrera@example.com', 3001112243, 1, 'Calle 9 #21-33', 62, 1, '800000001', NOW()),
+('20000012', 'Camila López', 'camila.lopez@example.com', 3001112244, 2, 'Carrera 4 #3-19', 62, 1, '800000001', NOW()),
+('20000013', 'Andrés Cárdenas', 'andres.cardenas@example.com', 3001112245, 1, 'Av 11 #55-12', 62, 1, '800000001', NOW()),
+('20000014', 'Valentina Mora', 'valentina.mora@example.com', 3001112246, 2, 'Calle 1 #9-77', 62, 1, '800000001', NOW()),
+('20000015', 'Jorge Díaz', 'jorge.diaz@example.com', 3001112247, 1, 'Carrera 40 #22-09', 62, 1, '800000001', NOW()),
+('20000016', 'Daniela Ruiz', 'daniela.ruiz@example.com', 3001112248, 2, 'Calle 25 #16-30', 62, 1, '800000001', NOW()),
+('20000017', 'Oscar Medina', 'oscar.medina@example.com', 3001112249, 1, 'Calle 6 #2-12', 62, 1, '800000001', NOW()),
+('20000018', 'Paula Andrade', 'paula.andrade@example.com', 3001112250, 2, 'Carrera 18 #6-60', 62, 1, '800000001', NOW()),
+('20000019', 'Ricardo Silva', 'ricardo.silva@example.com', 3001112251, 1, 'Calle 14 #9-02', 62, 1, '800000001', NOW()),
+('20000020', 'Diana León', 'diana.leon@example.com', 3001112252, 2, 'Calle 8 #33-18', 62, 1, '800000001', NOW()),
+('20000021', 'Hernán Torres', 'hernan.torres@example.com', 3001112253, 1, 'Carrera 29 #14-01', 62, 1, '800000001', NOW()),
+('20000022', 'Karina Robles', 'karina.robles@example.com', 3001112254, 2, 'Calle 3 #17-99', 62, 1, '800000001', NOW()),
+('20000023', 'Tomás Aguilar', 'tomas.aguilar@example.com', 3001112255, 1, 'Av 9 #30-27', 62, 1, '800000001', NOW()),
+('20000024', 'Elena Pinto', 'elena.pinto@example.com', 3001112256, 2, 'Calle 26 #12-14', 62, 1, '800000001', NOW()),
+('20000025', 'Sebastián Nieto', 'sebastian.nieto@example.com', 3001112257, 1, 'Carrera 1 #7-70', 62, 1, '800000001', NOW());
+
 CREATE TABLE tab_tipo_capacitacion (
   codTipoCapacitacion int NOT NULL AUTO_INCREMENT,
   nomTipoCapacitacion varchar(80) NOT NULL,
@@ -419,9 +449,7 @@ CREATE TABLE tab_tipo_capacitacion (
 );
 
 INSERT INTO tab_tipo_capacitacion (codTipoCapacitacion, nomTipoCapacitacion, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) VALUES
-(1, 'Gerencia', '800000001', now(), NULL, NULL),
-(2, 'Seguridad en el Trabajo', '800000001', now(), NULL, NULL),
-(3, 'Sistemas', '800000001', now(), NULL, NULL);
+(1, 'Seguridad en el Trabajo', '800000001', now(), NULL, NULL);
 
 CREATE TABLE tab_capacitaciones (
   codCapacitacion int NOT NULL AUTO_INCREMENT,
@@ -445,6 +473,9 @@ CREATE TABLE tab_capacitaciones (
   FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado) 
 );
 
+INSERT INTO tab_capacitaciones (codCapacitacion, nomCapacitacion, fecha, tiempo, asistencia, observacion, codTipoCapacitacion, codUsuario, codCiudad, codEstado, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) 
+VALUES (1, 'Errores en las alturas', '20/11/2025', 30, 0, 'Los errores en las alturas son fallas humanas o técnicas que ocurren durante trabajos elevados y que pueden generar riesgos graves para la integridad y seguridad.', 2, '800000002', 62, 3, '800000002', '2025-11-12 19:00:19', '20000001', '2025-11-18 20:31:45');
+
 CREATE TABLE tab_asistencias (
   codAsistencia int NOT NULL AUTO_INCREMENT,
   codCapacitacion int NOT NULL,
@@ -465,8 +496,7 @@ DELIMITER //
 CREATE PROCEDURE registrarAsistencia (
     IN p_codCapacitacion INT,
     IN p_codEmpleado VARCHAR(30),
-    IN p_codEvaluacion INT,
-    IN p_fecha VARCHAR(12)
+    IN p_codEvaluacion INT
 )
 BEGIN
     DECLARE v_contador INT DEFAULT 0;
@@ -483,7 +513,7 @@ BEGIN
     WHERE codEstado = 1;
 
     INSERT INTO tab_asistencias(codCapacitacion, codEmpleado, codEvaluacion, fecha, usuarioCreacion, fechaCreacion) 
-    VALUES (p_codCapacitacion, p_codEmpleado, p_codEvaluacion, p_fecha, p_codEmpleado, NOW() );
+    VALUES (p_codCapacitacion, p_codEmpleado, p_codEvaluacion, NOW(), p_codEmpleado, NOW() );
 
     SET v_asistencia = v_contador + 1;
     IF v_asistencia = v_empleados THEN
