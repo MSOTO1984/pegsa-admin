@@ -173,14 +173,12 @@ class Formulario {
         }
 
         $readonly = "";
-        if (isset($params['readonly'])) {
-            if ($params['readonly'] == "1") {
-                $readonly = " readonly ";
-            }
+        if (isset($params['readonly']) && $params['readonly'] == 1) {
+            $readonly = " readonly ";
         }
 
         $disabled = "";
-        if (isset($params['disabled'])) {
+        if (isset($params['disabled']) && $params['disabled'] == 1) {
             $disabled = " disabled ";
         }
 
@@ -254,14 +252,12 @@ class Formulario {
         }
 
         $readonly = "";
-        if (isset($params['readonly'])) {
-            if ($params['readonly'] == "1") {
-                $readonly = " readonly ";
-            }
+        if (isset($params['readonly']) && $params['readonly'] == 1) {
+            $readonly = " readonly ";
         }
 
         $disabled = "";
-        if (isset($params['disabled'])) {
+        if (isset($params['disabled']) && $params['disabled'] == 1) {
             $disabled = " disabled ";
         }
 
@@ -305,14 +301,12 @@ class Formulario {
         }
 
         $readonly = "";
-        if (isset($params['readonly'])) {
-            if ($params['readonly'] == "1") {
-                $readonly = " readonly ";
-            }
+        if (isset($params['readonly']) && $params['readonly'] == 1) {
+            $readonly = " readonly ";
         }
 
         $disabled = "";
-        if (isset($params['disabled'])) {
+        if (isset($params['disabled']) && $params['disabled'] == 1) {
             $disabled = " disabled ";
         }
 

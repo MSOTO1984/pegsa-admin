@@ -149,6 +149,8 @@ class Capacitacion {
             $_REQUEST['codEstado'] = 3;
         }
 
+        $disabled = ($_REQUEST['codEstado'] == 3) ? 1 : 0;
+
         $fn = new Funciones();
         $form = new formulario();
 
@@ -171,15 +173,15 @@ class Capacitacion {
         $form->inicioDiv("row");
 
         $form->inicioDiv("col-lg-4");
-        $form->text(array("label" => "Tema", "id" => "nomCapacitacion", "required" => "1"));
+        $form->text(array("label" => "Tema", "id" => "nomCapacitacion", "required" => "1", "disabled" => $disabled));
         $form->finDiv();
 
         $form->inicioDiv("col-lg-4");
-        $form->datePicker(array("label" => "Fecha", "id" => "fecha", "required" => "1"));
+        $form->datePicker(array("label" => "Fecha", "id" => "fecha", "required" => "1", "disabled" => $disabled));
         $form->finDiv();
 
         $form->inicioDiv("col-lg-4");
-        $form->text(array("label" => "Tiempo", "type" => "text", "id" => "tiempo", "required" => "1"));
+        $form->text(array("label" => "Tiempo", "type" => "text", "id" => "tiempo", "required" => "1", "disabled" => $disabled));
         $form->finDiv();
 
         $form->finDiv();
@@ -191,11 +193,11 @@ class Capacitacion {
         $form->finDiv();
 
         $form->inicioDiv("col-lg-4");
-        $form->lista(array("label" => "Tipo", "id" => "codTipoCapacitacion", "required" => "1"), $fn->getLista("codTipoCapacitacion", "nomTipoCapacitacion", "tab_tipo_capacitacion", null));
+        $form->lista(array("label" => "Tipo", "id" => "codTipoCapacitacion", "required" => "1", "disabled" => $disabled), $fn->getLista("codTipoCapacitacion", "nomTipoCapacitacion", "tab_tipo_capacitacion", null));
         $form->finDiv();
 
         $form->inicioDiv("col-lg-4");
-        $form->lista(array("label" => "Capacitador", "id" => "codUsuario", "required" => "1"), $fn->getLista("codUsuario", "nomUsuario", "tab_usuarios", array("perfil" => true, "codPerfil" => 2)));
+        $form->lista(array("label" => "Capacitador", "id" => "codUsuario", "required" => "1", "disabled" => $disabled), $fn->getLista("codUsuario", "nomUsuario", "tab_usuarios", array("perfil" => true, "codPerfil" => 2)));
         $form->finDiv();
 
         $form->finDiv();
@@ -203,15 +205,15 @@ class Capacitacion {
         $form->inicioDiv("row");
 
         $form->inicioDiv("col-lg-4");
-        $form->lista(array("label" => "Departamento ", "id" => "codDepto", "required" => "1", "onchange" => "getListaCiudades()"), $this->getListaDeptos(1));
+        $form->lista(array("label" => "Departamento ", "id" => "codDepto", "required" => "1", "disabled" => $disabled, "onchange" => "getListaCiudades()"), $this->getListaDeptos(1));
         $form->finDiv();
 
         $form->inicioDiv("col-lg-4");
-        $form->lista(array("label" => "Ciudad", "id" => "codCiudad", "required" => "1"), $this->getListaCiudades($_REQUEST['codDepto']));
+        $form->lista(array("label" => "Ciudad", "id" => "codCiudad", "required" => "1", "disabled" => $disabled), $this->getListaCiudades($_REQUEST['codDepto']));
         $form->finDiv();
 
         $form->inicioDiv("col-lg-4");
-        $form->lista(array("label" => "Estado", "id" => "codEstado", "required" => "1"), $fn->getLista("codEstado", "nomEstado", "tab_estados", array("tipoEstado" => true, "codTipoEstado" => 2)));
+        $form->lista(array("label" => "Estado", "id" => "codEstado", "required" => "1", "disabled" => $disabled), $fn->getLista("codEstado", "nomEstado", "tab_estados", array("tipoEstado" => true, "codTipoEstado" => 2)));
         $form->finDiv();
 
         $form->finDiv();
@@ -219,26 +221,28 @@ class Capacitacion {
         $form->inicioDiv("row");
 
         $form->inicioDiv("col-lg-12");
-        $form->textArea(array("label" => "Observaci&oacute;n", "type" => "text", "id" => "observacion", "rows" => 4));
+        $form->textArea(array("label" => "Observaci&oacute;n", "type" => "text", "id" => "observacion", "rows" => 4, "disabled" => $disabled));
         $form->finDiv();
 
         $form->finDiv();
 
         $form->inicioDiv("button-list");
         $form->center();
-        $form->Hidden(array("name" => "codPage", "value" => $_REQUEST['cod']));
-        if ($accion == "Actualizar") {
-            $form->Hidden(array("name" => "codCapacitacion", "value" => $_REQUEST['codCapacitacion']));
+        if ($disabled == 0) {
+            $form->Hidden(array("name" => "codPage", "value" => $_REQUEST['cod']));
+            if ($accion == "Actualizar") {
+                $form->Hidden(array("name" => "codCapacitacion", "value" => $_REQUEST['codCapacitacion']));
+            }
+            $form->botonAcciones(array(
+                "link" => false,
+                "type" => "button",
+                "boton" => "btn-primary",
+                "id" => "state",
+                "icon" => "fa fa-plus",
+                "label" => $accion,
+                "onclick" => "return validarCapacitacion()"
+            ));
         }
-        $form->botonAcciones(array(
-            "link" => false,
-            "type" => "button",
-            "boton" => "btn-primary",
-            "id" => "state",
-            "icon" => "fa fa-plus",
-            "label" => $accion,
-            "onclick" => "return validarCapacitacion()"
-        ));
         $form->botonAcciones(array(
             "link" => true,
             "type" => "button",

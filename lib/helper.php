@@ -87,8 +87,8 @@ function form_select($params = "", $lista = "") {
     }
 
     $disabled = "";
-    if (isset($params['disabled'])) {
-        $disabled = "disabled";
+    if (isset($params['disabled']) && $params['disabled'] == 1) {
+        $disabled = " disabled ";
     }
 
     $form = '<select ' . $disabled . ' class="form-control" id="' . $params['id'] . '" name="' . $params['id'] . '" ' . $onchange . '>';
