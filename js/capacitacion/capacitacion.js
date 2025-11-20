@@ -47,6 +47,10 @@ function validarCapacitacion() {
     if (codEstado === "") {
         alert('Recuerde seleccionar un estado');
         return false;
+    } else if (codEstado === "4") {
+        confirm('Esta a punto de dar como DADA la capacitacion, recuerde que este proceso es automatico y si da cierre manual ya nadie mas podra firmar, esta seguro de esta accion?');
+    } else if (codEstado === "5") {
+        confirm('Esta a punto de dar como CANCELADA la capacitacion, recuerde que este proceso da cierre manual ya nadie mas podra firmar, esta seguro de esta accion?');
     }
 
     accionesCapacitacion(cod);
