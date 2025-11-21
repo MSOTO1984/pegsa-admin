@@ -356,7 +356,7 @@ class Asistencia {
                 $codEmpleado == null && $codEstado == null) {
             echo '  <div class="callout callout-info">
                         <h4>Consultar Asistencias!</h4>
-                        <p>Para consultar Gu&iacute;as recuerde incluir al menos un parametro de busqueda.</p>
+                        <p>Para consultar Asistencias recuerde incluir al menos un parametro de busqueda.</p>
                     </div>';
             return null;
         } else {
