@@ -114,7 +114,43 @@ class Asistencia {
 
     function generarTablaAsistencias($form) {
 
-        $list = $this->getListado(null);
+        $codUsuario = null;
+        $fechaIni = null;
+        $fechaFin = null;
+        $codTipoCapacitacion = null;
+        $codCapacitacion = null;
+        $codEmpleado = null;
+        $codEstado = null;
+
+        if (isset($_REQUEST['codUsuario'])) {
+            $codUsuario = $_REQUEST['codUsuario'];
+        }
+
+        if (isset($_REQUEST['fechaIni'])) {
+            $fechaIni = $_REQUEST['fechaIni'];
+        }
+
+        if (isset($_REQUEST['fechaFin'])) {
+            $fechaFin = $_REQUEST['fechaFin'];
+        }
+
+        if (isset($_REQUEST['codTipoCapacitacion'])) {
+            $codTipoCapacitacion = $_REQUEST['codTipoCapacitacion'];
+        }
+
+        if (isset($_REQUEST['codCapacitacion'])) {
+            $codCapacitacion = $_REQUEST['codCapacitacion'];
+        }
+
+        if (isset($_REQUEST['codEmpleado'])) {
+            $codEmpleado = $_REQUEST['codEmpleado'];
+        }
+
+        if (isset($_REQUEST['codEstado'])) {
+            $codEstado = $_REQUEST['codEstado'];
+        }
+
+        $list = $this->getListado(null, $codUsuario, $fechaIni, $fechaFin, $codTipoCapacitacion, $codCapacitacion, $codEmpleado, $codEstado);
         if (isset($list) && count($list) > 0) {
 
             echo "<hr/>";
@@ -130,34 +166,6 @@ class Asistencia {
                 "label" => "Generar Reporte Asistentes Excel"
             ));
 
-            if (!isset($_REQUEST['codUsuario'])) {
-                $_REQUEST['codUsuario'] = '';
-            }
-
-            if (!isset($_REQUEST['fechaIni'])) {
-                $_REQUEST['fechaIni'] = '';
-            }
-
-            if (!isset($_REQUEST['fechaFin'])) {
-                $_REQUEST['fechaFin'] = '';
-            }
-
-            if (!isset($_REQUEST['codTipoCapacitacion'])) {
-                $_REQUEST['codTipoCapacitacion'] = '';
-            }
-
-            if (!isset($_REQUEST['codCapacitacion'])) {
-                $_REQUEST['codCapacitacion'] = '';
-            }
-
-            if (!isset($_REQUEST['codEmpleado'])) {
-                $_REQUEST['codEmpleado'] = '';
-            }
-
-            if (!isset($_REQUEST['codEstado'])) {
-                $_REQUEST['codEstado'] = '';
-            }
-
             $form->Hidden(array("name" => "codUsuarioEx", "value" => $_REQUEST["codUsuario"]));
             $form->Hidden(array("name" => "fechaIniEx", "value" => $_REQUEST['fechaIni']));
             $form->Hidden(array("name" => "fechaFinEx", "value" => $_REQUEST['fechaFin']));
@@ -167,9 +175,9 @@ class Asistencia {
             $form->Hidden(array("name" => "codEstadoEx", "value" => $_REQUEST['codEstado']));
 
             $form->finForm();
+            $form->espacio();
+            echo $this->tablaDeContenido($list);
         }
-        $form->espacio();
-        echo $this->tablaDeContenido($list);
     }
 
     function tablaDeContenido($list) {
@@ -245,7 +253,7 @@ class Asistencia {
 
     function vista() {
 
-        $info = $this->getListado($_REQUEST[$this->llave]);
+        $info = $this->getListado($_REQUEST[$this->llave], null, null, null, null, null, null, null);
         if ($info) {
             $info = $info[0];
             $_REQUEST = array_merge($_REQUEST, $info);
@@ -341,8 +349,19 @@ class Asistencia {
         $form->finDiv();
     }
 
-    function getListado($cod) {
-        $sql = "SELECT  a.*, 
+    function getListado($cod, $codUsuario, $fechaIni, $fechaFin, $codTipoCapacitacion, $codCapacitacion, $codEmpleado, $codEstado) {
+
+        if ($cod == null && $codUsuario == null && $fechaIni == null && $fechaFin == null &&
+                $codTipoCapacitacion == null && $codCapacitacion == null &&
+                $codEmpleado == null && $codEstado == null) {
+            echo '  <div class="callout callout-info">
+                        <h4>Consultar Asistencias!</h4>
+                        <p>Para consultar Gu&iacute;as recuerde incluir al menos un parametro de busqueda.</p>
+                    </div>';
+            return null;
+        } else {
+
+            $sql = "SELECT  a.*, 
                         b.nomEmpleado, 
                         c.nomCapacitacion, 
                         c.fecha,
@@ -364,36 +383,38 @@ class Asistencia {
                             LEFT JOIN tab_estados h on c.codEstado = h.codEstado
                  WHERE  1 = 1";
 
-        if ($cod) {
-            $sql .= " AND a." . $this->llave . " = '" . $cod . "' ";
-        }
+            if (isset($cod)) {
+                $sql .= " AND a." . $this->llave . " = '" . $cod . "' ";
+            }
 
-        if (isset($_REQUEST['codUsuario']) && $_REQUEST['codUsuario'] != '') {
-            $sql .= " AND c.codUsuario = '" . $_REQUEST['codUsuario'] . "'";
-        }
+            if ($codUsuario != '') {
+                $sql .= " AND c.codUsuario = '" . $codUsuario . "'";
+            }
 
-        if (isset($_REQUEST['fechaIni']) && $_REQUEST['fechaIni'] != '' && isset($_REQUEST['fechaFin']) && $_REQUEST['fechaFin'] != '') {
-            $sql .= " AND c.fecha between '" . $_REQUEST['fechaIni'] . "' AND '" . $_REQUEST['fechaFin'] . "'";
-        }
+            if ($fechaIni != '' && $fechaFin != '') {
+                $sql .= " AND c.fecha between '" . $fechaIni . "' AND '" . $fechaFin . "'";
+            }
 
-        if (isset($_REQUEST['codTipoCapacitacion']) && $_REQUEST['codTipoCapacitacion'] != '') {
-            $sql .= " AND c.codTipoCapacitacion = '" . $_REQUEST['codTipoCapacitacion'] . "'";
-        }
+            if ($codTipoCapacitacion != '') {
+                $sql .= " AND c.codTipoCapacitacion = '" . $codTipoCapacitacion . "'";
+            }
 
-        if (isset($_REQUEST['codCapacitacion']) && $_REQUEST['codCapacitacion'] != '') {
-            $sql .= " AND a.codCapacitacion = '" . $_REQUEST['codCapacitacion'] . "'";
-        }
+            if ($codCapacitacion != '') {
+                $sql .= " AND a.codCapacitacion = '" . $codCapacitacion . "'";
+            }
 
-        if (isset($_REQUEST['codEmpleado']) && $_REQUEST['codEmpleado'] != '') {
-            $sql .= " AND a.codEmpleado = '" . $_REQUEST['codEmpleado'] . "'";
-        }
+            if ($codEmpleado != '') {
+                $sql .= " AND a.codEmpleado = '" . $codEmpleado . "'";
+            }
 
-        if (isset($_REQUEST['codEstado']) && $_REQUEST['codEstado'] != '') {
-            $sql .= " AND c.codEstado = '" . $_REQUEST['codEstado'] . "' ";
-        }
+            if ($codEstado != '') {
+                $sql .= " AND c.codEstado = '" . $codEstado . "' ";
+            }
 
-        $sql .= " ORDER BY c.codCapacitacion DESC ";
-        return Conexion::obtener($sql);
+
+            $sql .= " ORDER BY c.codCapacitacion DESC ";
+            return Conexion::obtener($sql);
+        }
     }
 
     function getListaEmpleados($codEmpleado) {
