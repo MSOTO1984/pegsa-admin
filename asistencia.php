@@ -5,15 +5,30 @@ include_once 'lib/conexion.php';
 include_once 'lib/helper.php';
 include_once 'lib/funciones.php';
 include_once 'lib/formulario.php';
+include_once 'lib/consultas.php';
 
 Conexion::conectar();
 
 $capacitacion = null;
-if (isset($_GET['codCapacitacion'])) {
-    $codCapacitacion = $_GET['codCapacitacion'];
-    $capacitacion = getCapacitacion($codCapacitacion);
+$codEmpleado = null;
+if (isset($_GET['codCapacitacion']) && isset($_GET['codEmpleado'])) {
     $codEmpleado = $_GET['codEmpleado'];
-    $firmado = (boolean) validarFirmaEmpleado($codCapacitacion, $codEmpleado);
+    $codCapacitacion = $_GET['codCapacitacion'];
+
+    $Cn = new Consultas();
+
+    $capacitacion = $Cn->getCapacitacion($codCapacitacion);
+    if ((int) $capacitacion['evaluacion'] > 0) {
+        $evaluado = $Cn->verificarEvaluacionDiligenciadas($codCapacitacion, $codEmpleado);
+        if (!isset($evaluado)) {
+            echo "<script>
+                    alert('Hemos encontrado evaluaciones pendientes por diligenciar.');
+                    window.location.href = 'evaluacion.php?codCapacitacion=$codCapacitacion&codEmpleado=$codEmpleado';
+                  </script>";
+            exit;
+        }
+    }
+    $firmado = (boolean) $Cn->validarFirmaEmpleado($codCapacitacion, $codEmpleado);
 }
 ?>
 <!DOCTYPE html>
@@ -41,7 +56,7 @@ if (isset($_GET['codCapacitacion'])) {
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <aside class="right-side">
                 <?php
-                if (!isset($capacitacion)) {
+                if (!isset($capacitacion) || !isset($codEmpleado)) {
                     include_once 'lib/404.php';
                 } else {
                     $color = 'info';
@@ -64,7 +79,7 @@ if (isset($_GET['codCapacitacion'])) {
                         <div class="row">
                             <div class="col-xs-12">
                                 <h2 class="page-header">
-                                    <i class="fa fa-binoculars"></i>&nbsp; <?= $capacitacion['nomCapacitacion'] ?>
+                                    <i class="fa fa-binoculars"></i>&nbsp; <?= $capacitacion['nomCapacitacion'] ?> | Firma
                                     <small class="pull-right"><strong>Fecha Realizaci&oacute;n:</strong> <?= $capacitacion['fecha'] ?></small>
                                 </h2>
                             </div>
@@ -111,7 +126,7 @@ if (isset($_GET['codCapacitacion'])) {
                                 <?php
                                 $fn = new Funciones();
                                 $form = new formulario();
-                                $form->lista(array("label" => "Colaborador", "id" => "codEmpleado", "disabled" => 1), getListaEmpleados($codEmpleado));
+                                $form->lista(array("label" => "Colaborador", "id" => "codEmpleado", "disabled" => 1), $Cn->getListaEmpleados($codEmpleado));
                                 ?>
                             </div>
                         </div>
@@ -158,39 +173,3 @@ if (isset($_GET['codCapacitacion'])) {
     </body>
 </html>
 <?php
-
-function validarFirmaEmpleado($codCapacitacion, $codEmpleado) {
-    $sql = "SELECT count(*) cantidad
-            FROM   tab_asistencias                
-            WHERE  codEmpleado = '" . $codEmpleado . "'
-              AND  codCapacitacion = " . $codCapacitacion;
-    $result = Conexion::obtener($sql);
-    if (isset($result)) {
-        return $result[0]['cantidad'];
-    }
-    return 0;
-}
-
-function getCapacitacion($codCapacitacion) {
-    $sql = "SELECT a.*, b.nomTipoCapacitacion, c.nomUsuario, d.nomCiudad, e.nomDepto
-            FROM   tab_capacitaciones a 
-                        LEFT JOIN tab_tipo_capacitacion b on a.codTipoCapacitacion = b.codTipoCapacitacion
-                        LEFT JOIN tab_usuarios c on a.codUsuario = c.codUsuario
-                        LEFT JOIN tab_ciudades d on a.codCiudad = d.codCiudad
-                        LEFT JOIN tab_deptos e on d.codDepto = e.codDepto                        
-            WHERE  a.codEstado = 3
-              AND  a.codCapacitacion = " . $codCapacitacion;
-    $result = Conexion::obtener($sql);
-    if (isset($result)) {
-        return $result[0];
-    }
-    return null;
-}
-
-function getListaEmpleados($codEmpleado) {
-    $sql = "SELECT  a.codEmpleado, UPPER(a.nomEmpleado)
-            FROM    tab_empleados a                 
-            WHERE   a.codEstado = 1 
-              AND   codEmpleado = " . $codEmpleado;
-    return Conexion::obtener($sql);
-}

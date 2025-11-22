@@ -8,8 +8,8 @@ class Capacitacion {
     var $nombres = "Capacitaciones";
     var $mensaje = "El Capacitacion";
     var $llave = "codCapacitacion";
-    var $campos = array("nomCapacitacion", "fecha", "tiempo", "asistencia", "nomUsuario", "nomTipoCapacitacion", "nomCiudad", "nomEstado", "codTipoCapacitacion");
-    var $columnas = array("Opciones", "Tema", "Fecha", "Tiempo", "Firmas", "Capacitador", "Tipo", "Ciudad", "Estado", "Porcentaje de Avance");
+    var $campos = array("nomCapacitacion", "fecha", "tiempo", "asistencia", "evaluacion", "nomUsuario", "nomTipoCapacitacion", "nomCiudad", "nomEstado", "codTipoCapacitacion");
+    var $columnas = array("Opciones", "Tema", "Fecha", "Tiempo", "Firmas", "Evaluaci&oacute;n", "Capacitador", "Tipo", "Ciudad", "Estado", "Porcentaje de Avance");
 
     function Menu() {
 
@@ -157,9 +157,9 @@ class Capacitacion {
 
         $codigo = "";
         if (isset($_REQUEST['codCapacitacion'])) {
-            $codigo = ' #' . $_REQUEST['codCapacitacion'];
+            $codigo = $_REQUEST['codCapacitacion'];
         }
-        $titulo = ($accion == "Actualizar") ? "ACTUALIZAR CAPACITACI&Oacute;N" . $codigo : "CREAR CAPACITACI&Oacute;N";
+
 
         if (!isset($_REQUEST['asistencia'])) {
             $_REQUEST['asistencia'] = 0;
@@ -192,16 +192,37 @@ class Capacitacion {
         $params2['ruta'] = "js/capacitacion/capacitacion";
         $form->linkJs($params2);
 
+        $params2['ruta'] = "js/evaluacion/evaluacion";
+        $form->linkJs($params2);
+
         $form->inicioDiv("row");
         $form->inicioDiv("col-md-12");
-        $form->inicioDiv("box box-primary");
 
-        $form->inicioDiv("box-header");
-        echo '<h3 class="box-title">' . $titulo . '</h3>';
+        echo '              <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab_1" data-toggle="tab">Capacitaci&oacute;n #' . $codigo . '</a></li>
+                                    <li><a href="#tab_2" data-toggle="tab">Evaluaciones</a></li>                                    
+                                </ul>
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab_1">';
+        $form->iniForm("");
+        $this->tabCapacitacion($fn, $form, $disabled, $accion);
+        $form->finForm();
+        echo '                  </div><!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_2">';
+        $form->iniForm("");
+        $this->tabEvaluaciones($fn, $form, $disabled, $accion);
+        $form->finForm();
+        echo'                       </div><!-- /.tab-pane -->
+                                </div><!-- /.tab-content -->
+                            </div><!-- nav-tabs-custom -->
+                        </div><!-- /.col -->';
+
         $form->finDiv();
+        $form->finDiv();
+    }
 
-        $form->inicioDiv("box-body");
-
+    function tabCapacitacion($fn, $form, $disabled, $accion) {
         $form->inicioDiv("row");
 
         $form->inicioDiv("col-lg-4");
@@ -220,8 +241,12 @@ class Capacitacion {
 
         $form->inicioDiv("row");
 
-        $form->inicioDiv("col-lg-4");
+        $form->inicioDiv("col-lg-2");
         $form->text(array("label" => "Asistencia", "type" => "text", "id" => "asistencia", "readonly" => 1));
+        $form->finDiv();
+
+        $form->inicioDiv("col-lg-2");
+        $form->text(array("label" => "Evaluacion", "type" => "text", "id" => "evaluacion", "readonly" => 1));
         $form->finDiv();
 
         $form->inicioDiv("col-lg-4");
@@ -286,17 +311,128 @@ class Capacitacion {
         $form->finCenter();
         $form->finDiv();
 
-        
-        $this->generarExcelCapacitacio($form);
-        
-        
+        $this->generarExcelCapacitacion($form);
+    }
+
+    function tabEvaluaciones($fn, $form, $disabled) {
+
+        if (!isset($_REQUEST['codEstadoCE'])) {
+            $_REQUEST['codEstadoCE'] = 1;
+        }
+
+        $form->inicioDiv("row");
+
+        $form->inicioDiv("col-lg-2");
+        $form->lista(array("label" => "Tipo Evaluaci&oacute;n", "id" => "codTipoEvaluacion", "required" => "1", "disabled" => $disabled), $fn->getLista("codTipoEvaluacion", "nomTipoEvaluacion", "tab_tipo_evaluacion", null));
         $form->finDiv();
+
+        $form->inicioDiv("col-lg-6");
+        $form->lista(array("label" => "Evaluaci&oacute;n", "id" => "codEvaluacion", "required" => "1", "disabled" => $disabled), $fn->getLista("codEvaluacion", "nomEvaluacion", "tab_evaluaciones", array("codEstado" => 1)));
         $form->finDiv();
+
+        $form->inicioDiv("col-lg-2");
+        $form->datePicker(array("label" => "Fecha Limite", "id" => "fechaLimite", "required" => "1", "disabled" => $disabled));
         $form->finDiv();
+
+        $form->inicioDiv("col-lg-2");
+        echo '  <div class="form-group">
+                    <div class="radio">
+                        <label class="">
+                            <div class="iradio_minimal checked" aria-checked="true" aria-disabled="false" style="position: relative;"><input type="radio" name="esObligatoria" id="esObligatoriaSi" value="1" checked="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                            Es obligatoria
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label class="">
+                            <div class="iradio_minimal" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="radio" name="esObligatoria" id="esObligatoriaNo" value="0" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
+                            No es obligatoria
+                        </label>
+                    </div>                   
+                </div>';
+        $form->finDiv();
+
+        $form->finDiv();
+
+        $form->inicioDiv("row");
+
+        $form->inicioDiv("col-lg-2");
+        $form->text(array("label" => "Orden", "type" => "text", "id" => "ordenEvaluacion", "disabled" => $disabled));
+        $form->finDiv();
+
+        $form->inicioDiv("col-lg-2");
+        $form->lista(array("label" => "Estado", "id" => "codEstadoCE", "required" => "1", "disabled" => $disabled), $fn->getLista("codEstado", "nomEstado", "tab_estados", array("tipoEstado" => true, "codTipoEstado" => 1)));
+        $form->finDiv();
+
+        $form->finDiv();
+
+        $form->espacio();
+
+        $codCapacitacion = $_REQUEST['codCapacitacion'];
+        $evaluaciones = $this->evaluacionesAsignadas($codCapacitacion);
+
+        echo '      <div class="box-body table-responsive no-padding">
+                        <table class="table table-hover">
+                            <tbody>
+                                <tr>
+                                    <th>Tipo Evaluaci&oacute;n</th>
+                                    <th>Evaluaci&oacute;n</th>
+                                    <th>Fecha Limite</th>
+                                    <th>Obligatorio</th>
+                                    <th>Orden</th>
+                                    <th>Estado</th>
+                                </tr>';
+        if (isset($evaluaciones) && count($evaluaciones) > 0) {
+            foreach ($evaluaciones as $row) {
+                echo '          <tr>
+                                    <td>' . $row['nomTipoEvaluacion'] . '</td>
+                                    <td>' . $row['nomEvaluacion'] . '</td>
+                                    <td>' . $row['fechaLimite'] . '</td>
+                                    <td>' . $row['obligatoria'] . '</td>
+                                    <td><span class="label label-primary">' . $row['ordenEvaluacion'] . '</span></td>
+                                    <td>' . $row['nomEstado'] . '</td>
+                                </tr>';
+            }
+        }
+        echo '                  <tr>
+                                    <th>Tipo Evaluaci&oacute;n</th>
+                                    <th>Evaluaci&oacute;n</th>
+                                    <th>Fecha Limite</th>
+                                    <th>Obligatorio</th>
+                                    <th>Orden</th>
+                                    <th>Estado</th>
+                                </tr>                  
+                            </tbody>
+                        </table>
+                    </div>';
+
+        $form->inicioDiv("button-list");
+        $form->center();
+        if ($disabled == 0) {
+            $form->Hidden(array("name" => "codPage", "value" => $_REQUEST['cod']));
+            $form->Hidden(array("name" => "codCapacitacionCE", "value" => $codCapacitacion));
+            $form->botonAcciones(array(
+                "link" => false,
+                "type" => "button",
+                "boton" => "btn-primary",
+                "id" => "state2",
+                "icon" => "fa fa-plus",
+                "label" => "Incluir",
+                "onclick" => "return validarEvaluacion()"
+            ));
+        }
+        $form->botonAcciones(array(
+            "link" => true,
+            "type" => "button",
+            "boton" => "btn-default",
+            "id" => "back",
+            "icon" => "fa fa-fast-backward",
+            "label" => "Regresar a " . $this->nombres
+        ));
+        $form->finCenter();
         $form->finDiv();
     }
 
-    function generarExcelCapacitacio($form) {
+    function generarExcelCapacitacion($form) {
 
         echo "<hr/>";
         $form->iniForm(array("id" => "Formulario2", "name" => "Formulario2", "action" => "app/capacitacion/generador/excel_capacitacion.php"));
@@ -312,12 +448,16 @@ class Capacitacion {
         ));
 
         $form->Hidden(array("name" => "codCapacitacionEx", "value" => $_REQUEST['codCapacitacion']));
-       
+
         $form->finForm();
     }
 
     function getListado($cod) {
         $sql = "SELECT  a.*,
+                        CASE 
+                            WHEN a.evaluacion = 1 THEN 'SI'
+                            ELSE 'NO'
+                        END AS evaluacion,  
                         b.nomUsuario,
                         c.nomTipoCapacitacion,
                         d.codDepto,
@@ -349,7 +489,7 @@ class Capacitacion {
         if (isset($codDepto) && $codDepto !== '') {
             $sql = "SELECT  c.codCiudad, UPPER(c.nomCiudad)
                     FROM    tab_ciudades c                 
-                    WHERE   c.codDepto = $codDepto";
+                    WHERE   c.codDepto = " . $codDepto;
             return Conexion::obtener($sql);
         }
         return null;
@@ -362,6 +502,25 @@ class Capacitacion {
             return $result[0]['cantidad'];
         }
         return 0;
+    }
+
+    function evaluacionesAsignadas($codCapacitacion) {
+        $sql = "SELECT  a.fechaLimite,
+                        a.ordenEvaluacion,
+                        CASE 
+                            WHEN a.esObligatoria = 1 THEN 'SI'
+                            ELSE 'NO'
+                        END AS obligatoria,            
+                        b.nomEvaluacion,
+                        b.cantidadPreguntas,
+                        c.nomTipoEvaluacion,
+                        d.nomEstado
+                  FROM  tab_capacitacion_evaluacion a
+                                LEFT JOIN tab_evaluaciones b on a.codEvaluacion = b.codEvaluacion
+                                LEFT JOIN tab_tipo_evaluacion c on b.codTipoEvaluacion = c.codTipoEvaluacion
+                                LEFT JOIN tab_estados d ON a.codEstado = d.codEstado
+                 WHERE  a.codCapacitacion = " . $codCapacitacion;
+        return Conexion::obtener($sql);
     }
 }
 

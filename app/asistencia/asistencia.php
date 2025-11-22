@@ -177,6 +177,10 @@ class Asistencia {
             $form->finForm();
             $form->espacio();
             echo $this->tablaDeContenido($list);
+        } else {
+            echo '  <div class="callout callout-info">
+                        <p>No se encontraron registros.</p>
+                    </div>';
         }
     }
 

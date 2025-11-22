@@ -13,7 +13,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         $codEmpleado = $_POST['codEmpleado'];
         $codCapacitacion = $_POST['codCapacitacion'];
-        $codEvaluacion = $_POST['codEvaluacion'];
 
         $imageName = $_POST['codEmpleado'] . "_" . $_POST['codCapacitacion'] . ".png";
         $imageB64 = str_replace("data:image/png;base64,", "", $_POST['imageB64']);
@@ -24,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         file_put_contents(PATHFIRMAS . $imageName, base64_decode($imageB64));
 
-        $params = array($codCapacitacion, $codEmpleado, $codEvaluacion);
+        $params = array($codCapacitacion, $codEmpleado);
 
         $respuesta = new stdClass();
         if (Conexion::ejecutarSP('registrarAsistencia', $params)) {

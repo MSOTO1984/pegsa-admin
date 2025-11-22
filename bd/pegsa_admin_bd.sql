@@ -30,7 +30,7 @@ CREATE TABLE tab_tipo_estado (
 INSERT INTO tab_tipo_estado (codTipoEstado, nomTipoEstado, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) VALUES
 (1, 'APP', '800000001', now(), NULL, NULL),
 (2, 'CAPACITACIONES', '800000001', now(), NULL, NULL),
-(3, 'REGISTRO', '800000001', now(), NULL, NULL);
+(3, 'EVALUACION', '800000001', now(), NULL, NULL);
 
 CREATE TABLE tab_estados (
   codEstado int NOT NULL AUTO_INCREMENT,
@@ -47,8 +47,8 @@ INSERT INTO tab_estados (codEstado, nomEstado, codTipoEstado) VALUES
 (3, 'CREADA', 2),
 (4, 'DADA', 2),
 (5, 'CANCELADA', 2),
-(10, 'HECHO', 3),
-(11, 'NO HECHO', 3);
+(6, 'PRESENTADA', 3),
+(7, 'CALIFICADA', 3);
 
 CREATE TABLE tab_options (
   codOption int NOT NULL,
@@ -437,6 +437,132 @@ VALUES
 ('20000024', 'Elena Pinto', 'elena.pinto@example.com', 3001112256, 2, 'Calle 26 #12-14', 62, 1, '800000001', NOW()),
 ('20000025', 'Sebastián Nieto', 'sebastian.nieto@example.com', 3001112257, 1, 'Carrera 1 #7-70', 62, 1, '800000001', NOW());
 
+CREATE TABLE tab_tipo_evaluacion (
+  codTipoEvaluacion int NOT NULL AUTO_INCREMENT,
+  nomTipoEvaluacion varchar(80) NOT NULL,
+  usuarioCreacion varchar(60) NOT NULL,
+  fechaCreacion datetime NOT NULL,
+  usuarioEdicion varchar(60) DEFAULT NULL,
+  fechaEdicion datetime DEFAULT NULL,
+  PRIMARY KEY (codTipoEvaluacion),
+  CONSTRAINT UNIQUE_NOMBRE_TIPO_EVALUACION UNIQUE (nomTipoEvaluacion)
+);
+
+INSERT INTO tab_tipo_evaluacion (codTipoEvaluacion, nomTipoEvaluacion, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) VALUES
+(1, 'Test', '800000001', now(), NULL, NULL),
+(2, 'Encuesta', '800000001', now(), NULL, NULL),
+(3, 'Mixto', '800000001', now(), NULL, NULL);
+
+CREATE TABLE tab_evaluaciones (
+  codEvaluacion INT NOT NULL AUTO_INCREMENT,
+  nomEvaluacion VARCHAR(100) NOT NULL,
+  descripcion TEXT NULL,
+  codTipoEvaluacion int NOT NULL,
+  cantidadPreguntas  INT DEFAULT 0,
+  notaMaxima DECIMAL(5,2) DEFAULT 5.0,
+  codEstado INT NOT NULL,
+  usuarioCreacion VARCHAR(40) NOT NULL,
+  fechaCreacion DATETIME NOT NULL,
+  usuarioEdicion VARCHAR(40) DEFAULT NULL,
+  fechaEdicion DATETIME DEFAULT NULL,
+  PRIMARY KEY (codEvaluacion),
+  FOREIGN KEY (codTipoEvaluacion) REFERENCES tab_tipo_evaluacion(codTipoEvaluacion),
+  FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado)
+);
+
+INSERT INTO tab_evaluaciones (codEvaluacion, nomEvaluacion, descripcion, codTipoEvaluacion, cantidadPreguntas, notaMaxima, codEstado, usuarioCreacion, fechaCreacion) 
+VALUES (1, 'Evaluación: Riesgo en Trabajo en Alturas', 'Evaluación teórico-práctica sobre normas de seguridad, elementos de protección y riesgos asociados al trabajo en alturas.', 3, 10, 5.00, 1,'800000002', now());
+
+CREATE TABLE tab_tipo_pregunta (
+  codTipoPregunta INT NOT NULL AUTO_INCREMENT,
+  nomTipoPregunta VARCHAR(50) NOT NULL,
+  descripcion TEXT NULL,
+  calificaAutomatico TINYINT DEFAULT 1,
+  PRIMARY KEY (codTipoPregunta)
+);
+
+INSERT INTO tab_tipo_pregunta (codTipoPregunta, nomTipoPregunta, descripcion, calificaAutomatico) VALUES
+(1, 'Opción Múltiple (una correcta)', 'El usuario elige una opción correcta.', 1),
+(2, 'Selección Múltiple (varias correctas)', 'El usuario puede seleccionar varias respuestas.', 1),
+(3, 'Verdadero/Falso', 'Pregunta binaria con dos posibles respuestas.', 1),
+(4, 'Texto Abierto', 'El usuario escribe una respuesta manualmente.', 0),
+(5, 'Numérica', 'El usuario ingresa un número que puede compararse.', 1);
+
+CREATE TABLE tab_preguntas (
+  codPregunta INT NOT NULL AUTO_INCREMENT,
+  codEvaluacion INT NOT NULL,
+  enunciado TEXT NOT NULL,
+  codTipoPregunta INT NOT NULL,  
+  puntaje DECIMAL(5,2) DEFAULT 1.0,
+  ordenPregunta INT DEFAULT 1,
+  codEstado int NOT NULL,
+  PRIMARY KEY (codPregunta),
+  FOREIGN KEY (codEvaluacion) REFERENCES tab_evaluaciones(codEvaluacion),
+  FOREIGN KEY (codTipoPregunta) REFERENCES tab_tipo_pregunta(codTipoPregunta),
+  FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado)
+);
+
+INSERT INTO tab_preguntas (codPregunta, codEvaluacion, enunciado, codTipoPregunta, puntaje, ordenPregunta, codEstado) VALUES
+(1, 1, '¿Cuál es la altura mínima considerada como trabajo en alturas según la normativa colombiana?', 1, 0.5, 1, 1),
+(2, 1, 'Seleccione los elementos que componen un sistema de protección contra caídas.', 2, 0.5, 2, 1),
+(3, 1, 'El arnés debe inspeccionarse antes de cada uso. ¿Verdadero o falso?', 3, 0.5, 3, 1),
+(4, 1, 'Describa brevemente el procedimiento correcto para realizar una verificación de seguridad antes de subir a una plataforma elevada.', 4, 0.5, 4, 1),
+(5, 1, '¿A qué distancia mínima debe ubicarse un trabajador del borde sin protección?', 5, 0.5, 5, 1),
+(6, 1, '¿Qué elemento es obligatorio para todo trabajador que realice labores por encima de 1.50 m?', 1, 0.5, 6, 1),
+(7, 1, 'Seleccione todas las condiciones que representan un riesgo en trabajos en alturas.', 2, 0.5, 7, 1),
+(8, 1, 'El uso de línea de vida retráctil elimina completamente el riesgo de caída. ¿Verdadero o falso?', 3, 0.5, 8, 1),
+(9, 1, 'Explique qué debe hacerse si se detecta un daño en el arnés antes de iniciar labores.', 4, 0.5, 9, 1),
+(10, 1, 'Indique la capacidad máxima de peso recomendada (en kg) para un arnés certificado.', 5, 0.5, 10, 1);
+
+
+CREATE TABLE tab_respuestas (
+  codRespuesta INT NOT NULL AUTO_INCREMENT,
+  codPregunta INT NOT NULL,
+  textoRespuesta VARCHAR(255) NOT NULL,
+  esCorrecta TINYINT DEFAULT 0,
+  ordenRespuesta INT DEFAULT 1,
+  PRIMARY KEY (codRespuesta),
+  FOREIGN KEY (codPregunta) REFERENCES tab_preguntas(codPregunta)
+);
+
+INSERT INTO tab_respuestas (codRespuesta, codPregunta, textoRespuesta, esCorrecta, ordenRespuesta) VALUES
+(1, 1, '1.50 metros', 0, 1),
+(2, 1, '2.00 metros', 1, 2),
+(3, 1, '3.00 metros', 0, 3),
+(4, 1, '0.50 metros', 0, 4),
+(5, 2, 'Arnés de cuerpo completo', 1, 1),
+(6, 2, 'Eslinga con absorbedor de energía', 1, 2),
+(7, 2, 'Línea de vida', 1, 3),
+(8, 2, 'Guantes anticorte', 0, 4),
+(9, 3, 'Verdadero', 1, 1),
+(10, 3, 'Falso', 0, 2),
+(11, 6, 'Casco de seguridad', 0, 1),
+(12, 6, 'Arnés de seguridad', 1, 2),
+(13, 6, 'Zapatos dieléctricos', 0, 3),
+(14, 6, 'Gafas de seguridad', 0, 4),
+(15, 7, 'Superficies resbaladizas', 1, 1),
+(16, 7, 'Falta de línea de vida', 1, 2),
+(17, 7, 'Viento fuerte', 1, 3),
+(18, 7, 'Uso de arnés certificado', 0, 4),
+(19, 8, 'Verdadero', 0, 1),
+(20, 8, 'Falso', 1, 2);
+
+CREATE TABLE tab_respuestas_empleado (
+  codRespuestaEmpleado INT NOT NULL AUTO_INCREMENT,
+  codEvaluacion INT NOT NULL,
+  codPregunta INT NOT NULL,
+  codRespuesta INT NULL,
+  textoAbierto TEXT NULL,
+  codEmpleado varchar(40) NOT NULL,
+  puntajeObtenido DECIMAL(5,2) DEFAULT 0,
+  fechaRespuesta DATETIME NOT NULL,
+  PRIMARY KEY (codRespuestaEmpleado),
+  FOREIGN KEY (codEvaluacion) REFERENCES tab_evaluaciones(codEvaluacion),
+  FOREIGN KEY (codPregunta) REFERENCES tab_preguntas(codPregunta),
+  FOREIGN KEY (codRespuesta) REFERENCES tab_respuestas(codRespuesta),
+  FOREIGN KEY (codEmpleado) REFERENCES tab_empleados(codEmpleado)
+);
+
 CREATE TABLE tab_tipo_capacitacion (
   codTipoCapacitacion int NOT NULL AUTO_INCREMENT,
   nomTipoCapacitacion varchar(80) NOT NULL,
@@ -457,6 +583,7 @@ CREATE TABLE tab_capacitaciones (
   fecha varchar(10) NOT NULL,
   tiempo int DEFAULT 0,
   asistencia int DEFAULT 0,
+  evaluacion TINYINT DEFAULT 0,
   observacion TEXT DEFAULT NULL,
   codTipoCapacitacion int NOT NULL,
   codUsuario varchar(40) NOT NULL,
@@ -473,14 +600,54 @@ CREATE TABLE tab_capacitaciones (
   FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado) 
 );
 
-INSERT INTO tab_capacitaciones (codCapacitacion, nomCapacitacion, fecha, tiempo, asistencia, observacion, codTipoCapacitacion, codUsuario, codCiudad, codEstado, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) 
-VALUES (1, 'Errores en las alturas', '20/11/2025', 30, 0, 'Los errores en las alturas son fallas humanas o técnicas que ocurren durante trabajos elevados y que pueden generar riesgos graves para la integridad y seguridad.', 1, '800000002', 62, 3, '800000002', now(), null, null);
+INSERT INTO tab_capacitaciones (codCapacitacion, nomCapacitacion, fecha, tiempo, asistencia, evaluacion, observacion, codTipoCapacitacion, codUsuario, codCiudad, codEstado, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) 
+VALUES (1, 'Riesgo en las alturas', '20/11/2025', 30, 0, 1, 'Cuidado y medidas de seguridad al trabajar en alturas.', 1, '800000002', 62, 3, '800000002', now(), null, null);
+
+CREATE TABLE tab_capacitacion_evaluacion (
+  codCapacitacionEvaluacion INT NOT NULL AUTO_INCREMENT,
+  codCapacitacion INT NOT NULL,
+  codEvaluacion INT NOT NULL,
+  esObligatoria TINYINT DEFAULT 1,         
+  fechaLimite varchar(10) NOT NULL,     
+  ordenEvaluacion INT DEFAULT 1,           
+  codEstado INT NOT NULL DEFAULT 1,        
+  usuarioCreacion VARCHAR(40) NOT NULL,
+  fechaCreacion DATETIME NOT NULL,
+  usuarioEdicion VARCHAR(40) DEFAULT NULL,
+  fechaEdicion DATETIME DEFAULT NULL,
+  PRIMARY KEY (codCapacitacionEvaluacion),
+  CONSTRAINT UNIQUE_CAPACITACION_EVALUACION UNIQUE (codCapacitacion, codEvaluacion),
+  FOREIGN KEY (codCapacitacion) REFERENCES tab_capacitaciones(codCapacitacion),
+  FOREIGN KEY (codEvaluacion) REFERENCES tab_evaluaciones(codEvaluacion),
+  FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado)
+);
+
+CREATE TABLE tab_empleado_evaluacion (
+  codEmpleadoEvaluacion INT NOT NULL AUTO_INCREMENT,
+  codCapacitacion INT NOT NULL,
+  codEmpleado varchar(40) NOT NULL,
+  codEvaluacion INT NOT NULL,
+  fecha varchar(10) NOT NULL,
+  puntaje DECIMAL(5,2) DEFAULT 0,    
+  correctas INT DEFAULT 0,   
+  erradas INT DEFAULT 0,        
+  codEstado INT NOT NULL DEFAULT 1,        
+  usuarioCreacion VARCHAR(40) NOT NULL,
+  fechaCreacion DATETIME NOT NULL,
+  usuarioEdicion VARCHAR(40) DEFAULT NULL,
+  fechaEdicion DATETIME DEFAULT NULL,
+  PRIMARY KEY (codEmpleadoEvaluacion),
+  CONSTRAINT UNIQUE_EMPLEADO_CAPACITACION_EVALUACION UNIQUE (codEmpleado, codCapacitacion, codEvaluacion),
+  FOREIGN KEY (codCapacitacion) REFERENCES tab_capacitaciones(codCapacitacion),
+  FOREIGN KEY (codEmpleado) REFERENCES tab_empleados(codEmpleado),
+  FOREIGN KEY (codEvaluacion) REFERENCES tab_evaluaciones(codEvaluacion),
+  FOREIGN KEY (codEstado) REFERENCES tab_estados(codEstado)
+);
 
 CREATE TABLE tab_asistencias (
   codAsistencia int NOT NULL AUTO_INCREMENT,
   codCapacitacion int NOT NULL,
   codEmpleado varchar(40) NOT NULL,
-  codEvaluacion BIGINT(20) DEFAULT NULL,
   usuarioCreacion varchar(40) NOT NULL,
   fechaCreacion datetime NOT NULL,
   usuarioEdicion varchar(40) DEFAULT NULL,
@@ -494,8 +661,7 @@ DELIMITER //
 
 CREATE PROCEDURE registrarAsistencia (
     IN p_codCapacitacion INT,
-    IN p_codEmpleado VARCHAR(30),
-    IN p_codEvaluacion INT
+    IN p_codEmpleado VARCHAR(30)
 )
 BEGIN
     DECLARE v_contador INT DEFAULT 0;
@@ -511,8 +677,8 @@ BEGIN
     FROM tab_empleados 
     WHERE codEstado = 1;
 
-    INSERT INTO tab_asistencias(codCapacitacion, codEmpleado, codEvaluacion, usuarioCreacion, fechaCreacion) 
-    VALUES (p_codCapacitacion, p_codEmpleado, p_codEvaluacion, p_codEmpleado, NOW() );
+    INSERT INTO tab_asistencias(codCapacitacion, codEmpleado, usuarioCreacion, fechaCreacion) 
+    VALUES (p_codCapacitacion, p_codEmpleado, p_codEmpleado, NOW() );
 
     SET v_asistencia = v_contador + 1;
     IF v_asistencia = v_empleados THEN
@@ -532,3 +698,4 @@ BEGIN
 END//
 
 DELIMITER ;
+
