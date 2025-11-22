@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $respuesta->mensaje = "Acción ( " . $state . " ) realizada con exito! ";
             echo json_encode($respuesta);
         }
-    } if ($state == "respuestas") {
+    } else if ($state == "respuestas") {
 
         $codEmpleado = $_POST['codEmpleado'];
         $codCapacitacion = $_POST['codCapacitacion'];

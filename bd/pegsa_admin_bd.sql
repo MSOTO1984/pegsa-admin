@@ -514,7 +514,6 @@ INSERT INTO tab_preguntas (codPregunta, codEvaluacion, enunciado, codTipoPregunt
 (9, 1, 'Explique qué debe hacerse si se detecta un daño en el arnés antes de iniciar labores.', 4, 0.5, 9, 1),
 (10, 1, 'Indique la capacidad máxima de peso recomendada (en kg) para un arnés certificado.', 5, 0.5, 10, 1);
 
-
 CREATE TABLE tab_respuestas (
   codRespuesta INT NOT NULL AUTO_INCREMENT,
   codPregunta INT NOT NULL,
@@ -601,7 +600,7 @@ CREATE TABLE tab_capacitaciones (
 );
 
 INSERT INTO tab_capacitaciones (codCapacitacion, nomCapacitacion, fecha, tiempo, asistencia, evaluacion, observacion, codTipoCapacitacion, codUsuario, codCiudad, codEstado, usuarioCreacion, fechaCreacion, usuarioEdicion, fechaEdicion) 
-VALUES (1, 'Riesgo en las alturas', '20/11/2025', 30, 0, 1, 'Cuidado y medidas de seguridad al trabajar en alturas.', 1, '800000002', 62, 3, '800000002', now(), null, null);
+VALUES (1, 'Riesgo en las alturas', '20/11/2025', 30, 0, 0, 'Cuidado y medidas de seguridad al trabajar en alturas.', 1, '800000002', 62, 3, '800000002', now(), null, null);
 
 CREATE TABLE tab_capacitacion_evaluacion (
   codCapacitacionEvaluacion INT NOT NULL AUTO_INCREMENT,
