@@ -38,7 +38,7 @@ class CrudEvaluacion {
         if (isset($result)) {
             return $result[0]['evaluacion'];
         }
-        return 0;
+        return 200;
     }
 
     function registrarEmpleadoEvaluacion($codCapacitacion, $codEmpleado, $codEvaluacion, $usuarioCreacion) {

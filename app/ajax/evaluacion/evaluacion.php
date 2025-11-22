@@ -33,6 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $respuesta->status = "OK";
             $respuesta->mensaje = "Acción ( " . $state . " ) realizada con exito! ";
             echo json_encode($respuesta);
+        } else {
+            $respuesta = new stdClass();
+            $respuesta->evaluacion = $evaluacion;
+            $respuesta->codCapacitacion = $codCapacitacion;
+            $respuesta->status = "WRONG";
+            $respuesta->mensaje = "Error inesperado! ";
+            echo json_encode($respuesta);
         }
     } else if ($state == "respuestas") {
 
