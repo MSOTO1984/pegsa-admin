@@ -25,7 +25,6 @@ if (isset($_GET['codCapacitacion'])) {
     $evaluado = $Cn->verificarEvaluacionDiligenciadas($codCapacitacion, $codEmpleado);
     if ($evaluacion > 0 && isset($evaluado) && count($evaluado) == $evaluacion && !$firmado) {
         echo "  <script>
-                    alert('Evaluacion Dilinguenciada con exito.');
                     window.location.href = 'asistencia.php?codCapacitacion=$codCapacitacion&codEmpleado=$codEmpleado';
                 </script>";
         exit;
@@ -41,7 +40,6 @@ if (isset($_GET['codCapacitacion'])) {
 
     $pendientes = array_diff($listaEvaluaciones, $listaEvaluadas);
     if (empty($pendientes)) {
-        echo " <script> alert('Evaluacion Dilinguenciada con exito.'); ";
         echo " window.location.href = 'asistencia.php?codCapacitacion=$codCapacitacion&codEmpleado=$codEmpleado'; </script>";
         exit;
     }
