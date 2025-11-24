@@ -199,29 +199,32 @@ class Capacitacion {
 
         echo '              <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#tab_1" data-toggle="tab">Capacitaci&oacute;n #' . $codigo . '</a></li>
-                                    <li><a href="#tab_2" data-toggle="tab">Evaluaciones</a></li>                                    
-                                </ul>
+                                    <li class="active"><a href="#tab_1" data-toggle="tab">Capacitaci&oacute;n #' . $codigo . '</a></li>';
+        if ($accion == 'Actualizar') {
+            echo '                  <li><a href="#tab_2" data-toggle="tab">Evaluaciones</a></li>     ';
+        }
+        echo'                        </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="tab_1">';
-        $form->iniForm("");
         $this->tabCapacitacion($fn, $form, $disabled, $accion);
-        $form->finForm();
-        echo '                  </div><!-- /.tab-pane -->
-                                    <div class="tab-pane" id="tab_2">';
-        $form->iniForm("");
-        $this->tabEvaluaciones($fn, $form, $disabled, $accion);
-        $form->finForm();
-        echo'                       </div><!-- /.tab-pane -->
-                                </div><!-- /.tab-content -->
-                            </div><!-- nav-tabs-custom -->
-                        </div><!-- /.col -->';
+        echo '                      </div>';
+        if ($accion == 'Actualizar') {
+            echo '<div class="tab-pane" id="tab_2">';
+            $this->tabEvaluaciones($fn, $form, $disabled, $accion);
+            echo'                   </div>';
+        }
+        echo'                  </div>
+                            </div>
+                        </div>';
 
         $form->finDiv();
         $form->finDiv();
     }
 
     function tabCapacitacion($fn, $form, $disabled, $accion) {
+
+        $form->iniForm("");
+
         $form->inicioDiv("row");
 
         $form->inicioDiv("col-lg-4");
@@ -310,6 +313,8 @@ class Capacitacion {
         $form->finCenter();
         $form->finDiv();
 
+        $form->finForm();
+
         $this->generarExcelCapacitacion($form);
     }
 
@@ -318,6 +323,8 @@ class Capacitacion {
         if (!isset($_REQUEST['codEstadoCE'])) {
             $_REQUEST['codEstadoCE'] = 1;
         }
+
+        $form->iniForm("");
 
         $form->inicioDiv("row");
 
@@ -429,6 +436,8 @@ class Capacitacion {
         ));
         $form->finCenter();
         $form->finDiv();
+
+        $form->finForm();
     }
 
     function generarExcelCapacitacion($form) {

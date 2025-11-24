@@ -287,3 +287,16 @@ function crearFormEvaluacionCrear() {
     }
     return formData;
 }
+
+
+function generarPreguntas() {
+    var cantidadPreguntasP = parseInt(document.getElementById('cantidadPreguntasP').value);
+    var cantidad = cantidadPreguntasP + 1;
+    if (cantidad > 20) {
+        alert('No se pueden incluir mas de 20 preguntas por evaluacion.');
+        return false;
+    }
+
+    document.getElementById('cantidadPreguntasP').value = cantidad;
+
+}

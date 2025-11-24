@@ -191,23 +191,27 @@ class CrearEvaluacion {
 
         echo '              <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#tab_1" data-toggle="tab">Evaluaci&oacute;n #' . $codigo . '</a></li>
-                                    <li><a href="#tab_2" data-toggle="tab">Preguntas</a></li>                                    
-                                </ul>
+                                    <li class="active"><a href="#tab_1" data-toggle="tab">Evaluaci&oacute;n #' . $codigo . '</a></li>';
+        if ($accion == 'Actualizar') {
+            echo'                   <li><a href="#tab_2" data-toggle="tab">Preguntas/Respuestas</a></li>                                    ';
+        }
+        echo'                   </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="tab_1">';
         $form->iniForm("");
         $this->tabEvaluacion($fn, $form, $disabled, $accion);
         $form->finForm();
-        echo '                  </div><!-- /.tab-pane -->
-                                    <div class="tab-pane" id="tab_2">';
-        $form->iniForm("");
-        $this->tabPreguntas($fn, $form, $disabled, $accion);
-        $form->finForm();
-        echo'                       </div><!-- /.tab-pane -->
-                                </div><!-- /.tab-content -->
-                            </div><!-- nav-tabs-custom -->
-                        </div><!-- /.col -->';
+        echo '                      </div>';
+        if ($accion == 'Actualizar') {
+            echo'                   <div class="tab-pane" id="tab_2">';
+            $form->iniForm("");
+            $this->tabPreguntas($fn, $form, $disabled, $accion);
+            $form->finForm();
+            echo'                   </div>';
+        }
+        echo'                   </div>
+                            </div>
+                        </div>';
 
         $form->finDiv();
         $form->finDiv();
@@ -281,39 +285,30 @@ class CrearEvaluacion {
 
     function tabPreguntas($fn, $form, $disabled) {
 
-        if (!isset($_REQUEST['codEstadoCE'])) {
-            $_REQUEST['codEstadoCE'] = 1;
+
+        $_REQUEST['cantidadPreguntasP'] = 1;
+        if (isset($_REQUEST['cantidadPreguntas'])) {
+            $_REQUEST['cantidadPreguntasP'] = $_REQUEST['cantidadPreguntas'];
+        }
+
+        if (!isset($_REQUEST['codEstadoP'])) {
+            $_REQUEST['codEstadoP'] = 1;
         }
 
         $form->inicioDiv("row");
 
-        $form->inicioDiv("col-lg-2");
-        $form->lista(array("label" => "Tipo Evaluaci&oacute;n", "id" => "codTipoEvaluacion", "required" => "1", "disabled" => $disabled), $fn->getLista("codTipoEvaluacion", "nomTipoEvaluacion", "tab_tipo_evaluacion", null));
+        $form->inicioDiv("col-lg-3");
+        $form->textWithButton(array("label" => "Cantidad de Preguntas", "id" => "cantidadPreguntasP", "onclick" => "generarPreguntas()", "labelButton" => "Añadir Pregunta", "readonly" => 1));
         $form->finDiv();
 
-        $form->inicioDiv("col-lg-6");
-        $form->lista(array("label" => "Evaluaci&oacute;n", "id" => "codEvaluacion", "required" => "1", "disabled" => $disabled), $fn->getLista("codEvaluacion", "nomEvaluacion", "tab_evaluaciones", array("codEstado" => 1)));
         $form->finDiv();
 
-        $form->inicioDiv("col-lg-2");
-        $form->datePicker(array("label" => "Fecha Limite", "id" => "fechaLimite", "required" => "1", "disabled" => $disabled));
-        $form->finDiv();
+        $form->linea();
 
-        $form->inicioDiv("col-lg-2");
-        echo '  <div class="form-group">
-                    <div class="radio">
-                        <label class="">
-                            <div class="iradio_minimal checked" aria-checked="true" aria-disabled="false" style="position: relative;"><input type="radio" name="esObligatoria" id="esObligatoriaSi" value="1" checked="" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                            Es obligatoria
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label class="">
-                            <div class="iradio_minimal" aria-checked="false" aria-disabled="false" style="position: relative;"><input type="radio" name="esObligatoria" id="esObligatoriaNo" value="0" style="position: absolute; opacity: 0;"><ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins></div>
-                            No es obligatoria
-                        </label>
-                    </div>                   
-                </div>';
+        $form->inicioDiv("row");
+
+        $form->inicioDiv("col-lg-12");
+        $form->text(array("label" => "Enunciado", "type" => "text", "id" => "enunciado_1", "required" => "1"));
         $form->finDiv();
 
         $form->finDiv();
@@ -321,17 +316,26 @@ class CrearEvaluacion {
         $form->inicioDiv("row");
 
         $form->inicioDiv("col-lg-2");
-        $form->text(array("label" => "Orden", "type" => "text", "id" => "ordenEvaluacion", "disabled" => $disabled));
+        $form->text(array("label" => "Orden Pregunta", "id" => "ordenPregunta_1", "required" => "1"));
         $form->finDiv();
 
         $form->inicioDiv("col-lg-2");
-        $form->lista(array("label" => "Estado", "id" => "codEstadoCE", "required" => "1", "disabled" => $disabled), $fn->getLista("codEstado", "nomEstado", "tab_estados", array("tipoEstado" => true, "codTipoEstado" => 1)));
+        $form->lista(array("label" => "Estado Pregunta", "id" => "codEstado_1", "required" => "1"), $fn->getLista("codEstado", "nomEstado", "tab_estados", array("tipoEstado" => true, "codTipoEstado" => 1)));
         $form->finDiv();
 
+        $form->inicioDiv("col-lg-3");
+        $form->lista(array("label" => "Tipo Pregunta", "id" => "codTipoPregunta_1", "required" => "1", "disabled" => $disabled), $fn->getLista("codTipoPregunta", "nomTipoPregunta", "tab_tipo_pregunta", null));
+        $form->finDiv();
+
+        $form->finDiv();
+
+        $form->inicioDivId("", "contenedor_preguntas");
         $form->finDiv();
 
         $form->espacio();
 
+        
+        /*
         $codEvaluacion = $_REQUEST['codEvaluacion'];
         $evaluaciones = $this->evaluacionesAsignadas($codEvaluacion);
 
@@ -369,12 +373,12 @@ class CrearEvaluacion {
                             </tbody>
                         </table>
                     </div>';
-
+*/
         $form->inicioDiv("button-list");
         $form->center();
         if ($disabled == 0) {
             $form->Hidden(array("name" => "codPage", "value" => $_REQUEST['cod']));
-            $form->Hidden(array("name" => "codEvaluacionCE", "value" => $codEvaluacion));
+            //$form->Hidden(array("name" => "codEvaluacionCE", "value" => $codEvaluacion));
             $form->botonAcciones(array(
                 "link" => false,
                 "type" => "button",

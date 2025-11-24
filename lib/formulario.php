@@ -99,6 +99,10 @@ class Formulario {
         echo "</br>";
     }
 
+    function linea() {
+        echo "<hr/>";
+    }
+
     function titleForm($params = "") {
 
         if ($params == "") {
@@ -324,6 +328,58 @@ class Formulario {
         $html .= '          </div>';
         $html .= '          <input type="text" class="form-control datepicker" id="' . $id . '"  name="' . $id . '" placeholder="dd/mm/yyyy"' . $value . $readonly . $disabled . $required . '/>';
         $html .= '      </div>';
+        $html .= '  </div>';
+        echo $html;
+    }
+
+    function textWithButton($params = "") {
+
+        if ($params == "") {
+            $params = array();
+        }
+
+        $label = "";
+        if (isset($params['label'])) {
+            $label = $params['label'];
+        }
+
+        $id = "";
+        if (isset($params['id'])) {
+            $id = $params['id'];
+        }
+
+        $value = "";
+        if (isset($_REQUEST[$id])) {
+            $value = ' value="' . $_REQUEST[$id] . '" ';
+        }
+
+        $required = "";
+        if (isset($params['required'])) {
+            $label = "* " . $label;
+            $required = " required ";
+        }
+
+        $readonly = "";
+        if (isset($params['readonly']) && $params['readonly'] == 1) {
+            $readonly = " readonly ";
+        }
+
+        $onclick = "";
+        if (isset($params['onclick'])) {
+            $onclick = " onclick='" . $params['onclick'] . "' ";
+        }
+
+        $labelButton = "";
+        if (isset($params['labelButton'])) {
+            $labelButton = $params['labelButton'];
+        }
+
+        $html = '   <p><b>' . $label . '</b></p>';
+        $html .= '  <div class="input-group margin">';
+        $html .= '      <input type="text" id="' . $id . '" name="' . $id . '" ' . $value . $readonly . ' class="form-control">';
+        $html .= '      <span class="input-group-btn">';
+        $html .= '          <button class="btn btn-info btn-flat" type="button"' . $onclick . '>' . $labelButton . '</button>';
+        $html .= '      </span>';
         $html .= '  </div>';
         echo $html;
     }
