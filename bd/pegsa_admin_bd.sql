@@ -72,7 +72,10 @@ INSERT INTO tab_options (codOption, nomOption, rutOption, levOption, codParent, 
 (300, 'Generales', '', 1, 1, 'fa fa-binoculars', 1, 3),
 (301, 'Empleados', 'empleado/gestionarEmpleado', 2, 300, '', 1, 1),
 (302, 'Capacitaci&oacute;n', 'capacitacion/capacitacion', 2, 300, '', 1, 2),
-(303, 'Asistencias', 'asistencia/asistencia', 2, 300, '', 1, 3);
+(303, 'Asistencias', 'asistencia/asistencia', 2, 300, '', 1, 3),
+(400, 'Evaluacion', '', 1, 1, 'fa fa-institution', 1, 4),
+(401, 'Crear', 'evaluacion/crear', 2, 400, '', 1, 1),
+(402, 'Evaluaciones', 'evaluacion/evaluacion', 2, 400, '', 1, 2);
 
 CREATE TABLE tab_permisos (
   codPermiso int NOT NULL AUTO_INCREMENT,
@@ -90,7 +93,9 @@ INSERT INTO tab_permisos (codPermiso, codPerfil, codOption, usuarioCreacion, fec
 (2, 1, 201, '800000001', now()),
 (3, 1, 301, '800000001', now()),
 (4, 2, 302, '800000001', now()),
-(5, 2, 303, '800000001', now());
+(5, 2, 303, '800000001', now()),
+(6, 2, 401, '800000001', now()),
+(7, 2, 402, '800000001', now());
 
 CREATE TABLE tab_paises (
   codPais int NOT NULL AUTO_INCREMENT,
@@ -626,7 +631,6 @@ CREATE TABLE tab_empleado_evaluacion (
   codCapacitacion INT NOT NULL,
   codEmpleado varchar(40) NOT NULL,
   codEvaluacion INT NOT NULL,
-  fecha varchar(10) NOT NULL,
   puntaje DECIMAL(5,2) DEFAULT 0,    
   correctas INT DEFAULT 0,   
   erradas INT DEFAULT 0,        

@@ -93,4 +93,13 @@ class Consultas {
               ORDER BY  ordenRespuesta ASC";
         return Conexion::obtener($sql);
     }
+
+    function cantidadRespuestasCorrectas($codPregunta) {
+        $sql = "SELECT count(*) cantidad FROM tab_respuestas WHERE codPregunta = " . $codPregunta . " AND esCorrecta = 1";
+        $result = Conexion::obtener($sql);
+        if (isset($result)) {
+            return $result[0]['cantidad'];
+        }
+        return null;
+    }
 }

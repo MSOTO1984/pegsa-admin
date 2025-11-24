@@ -160,45 +160,63 @@ if (isset($_GET['codCapacitacion'])) {
                                     $preguntas = $Cn->obtenerPreguntasEvaluacion($codEvaluacionSiguiente);
                                     if (isset($preguntas) && count($preguntas) > 0) {
                                         foreach ($preguntas as $row) {
-                                            echo'  <div class="form-group">';
-                                            $name = 'preguntas_' . $row['codPregunta'];
+                                            $name = 'preguntas[' . $row['codPregunta'] . '][respuesta]';
+                                            echo '<div class="form-group pregunta" data-num="' . $row['codPregunta'] . '">';
                                             if ($row['codTipoPregunta'] == 4 || $row['codTipoPregunta'] == 5) {
-                                                echo '     <label for="' . $name . '">' . $row['ordenPregunta'] . '. ' . $row['enunciado'] . '</label>';
-                                                echo '     <input type="text" name="' . $name . '" id="' . $name . '" class="form-control" placeholder="Respuesta ...">';
+                                                echo '<label>' . $row['ordenPregunta'] . '. ' . $row['enunciado'] . '</label>';
+                                                echo '<input type="text" name="' . $name . '" class="form-control" placeholder="Respuesta ...">';
                                             } else {
-                                                echo '     <b>' . $row['ordenPregunta'] . '. ' . $row['enunciado'] . '</b>';
+                                                $cant = 0;
+                                                if ($row['codTipoPregunta'] == 2) {
+                                                    $cant = $Cn->cantidadRespuestasCorrectas($row['codPregunta']);
+                                                }
+                                                echo '<b>' . $row['ordenPregunta'] . '. ' . $row['enunciado'] . '</b>';
+                                                if ($row['codTipoPregunta'] == 2) {
+                                                    echo '  <div class="callout callout-warning">
+                                                                <p>Seleccionar m&aacute;s de ' . $cant . ' preguntas genera un puntaje 0!</p>
+                                                            </div>';
+                                                }
                                                 $respuestas = $Cn->obtenerRespuestasPregunta($row['codPregunta']);
-                                                if (isset($respuestas) && count($preguntas) > 0) {
+                                                if (isset($respuestas) && count($respuestas) > 0) {
                                                     foreach ($respuestas as $row2) {
-                                                        $count = 1;
-                                                        $id = 'pregunta_' . $row2['codRespuesta'] . '_' . $count;
+                                                        $id = 'pregunta_' . $row2['codRespuesta'];
                                                         if ($row['codTipoPregunta'] == 1 || $row['codTipoPregunta'] == 3) {
-                                                            echo ' <div class="radio">
+                                                            echo '  <div class="radio">
                                                                         <label for="' . $id . '">
-                                                                            <div class="iradio_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
-                                                                                <input type="radio" name="' . $name . '" id="' . $id . '" value="' . $row2['codRespuesta'] . '" style="position: absolute; opacity: 0;">
-                                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                                            </div>&nbsp;&nbsp;' . $row2['textoRespuesta'] . '
+                                                                            <div class="iradio_minimal" style="position: relative;">
+                                                                                <input type="radio" 
+                                                                                       name="' . $name . '" 
+                                                                                       id="' . $id . '" 
+                                                                                       value="' . $row2['codRespuesta'] . '" 
+                                                                                       style="position: absolute; opacity: 0;">
+                                                                                <ins class="iCheck-helper" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity:0;"></ins>
+                                                                            </div>
+                                                                            &nbsp;&nbsp;' . $row2['textoRespuesta'] . '
                                                                         </label>
                                                                     </div>';
                                                         } else if ($row['codTipoPregunta'] == 2) {
                                                             echo ' <div class="checkbox">
                                                                         <label for="' . $id . '">
-                                                                            <div class="icheckbox_minimal" aria-checked="false" aria-disabled="false" style="position: relative;">
-                                                                                <input type="checkbox" name="' . $id . '" id="' . $id . '" value="' . $row2['codRespuesta'] . '" style="position: absolute; opacity: 0;">
-                                                                                <ins class="iCheck-helper" style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
-                                                                            </div>&nbsp;&nbsp;' . $row2['textoRespuesta'] . '
+                                                                            <div class="icheckbox_minimal" style="position: relative;">
+                                                                                <input type="checkbox" 
+                                                                                       name="' . $name . '[]" 
+                                                                                       id="' . $id . '" 
+                                                                                       value="' . $row2['codRespuesta'] . '" 
+                                                                                       style="position: absolute; opacity: 0;">
+                                                                                <ins class="iCheck-helper" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity:0;"></ins>
+                                                                            </div>
+                                                                            &nbsp;&nbsp;' . $row2['textoRespuesta'] . '
                                                                         </label>
                                                                     </div>';
                                                         }
-                                                        $count++;
                                                     }
                                                 }
                                             }
-                                            echo ' </div>';
+                                            echo '</div>';
                                         }
                                     }
                                     ?>
+
                                     <div class="box-footer">
                                         <input type='hidden' id='codEvaluacion' name ='codEvaluacion' value='<?= $codEvaluacionSiguiente ?>'/>
                                         <input type='hidden' id='codCapacitacion' name ='codCapacitacion' value='<?= $codCapacitacion ?>'/>
